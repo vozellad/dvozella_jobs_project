@@ -1,20 +1,31 @@
-"""Contains values to not be made pubicly available on github."""
+"""Contains values to not be made publicly available on github."""
 from secrets import api_key
 
-"""..."""
+"""Scrapes and parses Google search results"""
 from serpapi import GoogleSearch
 
-search = GoogleSearch({
-    "q": "coffee",
-    "location": "Austin,Texas",
-    "api_key": "<your secret api key>"
-})
-result = search.get_dict()
+
+def get_search_results():
+    return GoogleSearch({
+        "q": "coffee",
+        "location": "Austin,Texas",
+        "api_key": api_key
+    })
+
+
+def search_results_to_dict(search):
+    return search.get_dict()
+
+
+def verify_results(results):
+    assert results["error"] is None
 
 
 def main():
-    print("Hello, world!")
-    print(api_key)
+    search = get_search_results()
+    results = search_results_to_dict(search)
+    verify_results(results)
+    print(results)
 
 
 if __name__ == "__main__":
