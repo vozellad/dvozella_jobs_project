@@ -22,7 +22,6 @@ def store_search_results(results):
 def main():
     results = get_search_results()
     store_search_results(results)
-    print(results)
 
 
 if __name__ == "__main__":
