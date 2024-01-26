@@ -10,11 +10,12 @@ def get_search_results():
         "q": "coffee",
         "location": "Austin,Texas",
         "api_key": api_key
-    })
+    }).get_dict()
 
 
-def search_results_to_dict(search):
-    return search.get_dict()
+def store_search_results(results):
+    with open("results.txt", "w") as file:
+        file.write(str(results))
 
 
 def verify_results(results):
@@ -22,9 +23,9 @@ def verify_results(results):
 
 
 def main():
-    search = get_search_results()
-    results = search_results_to_dict(search)
+    results = get_search_results()
     verify_results(results)
+    store_search_results(results)
     print(results)
 
 
