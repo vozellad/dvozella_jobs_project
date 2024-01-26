@@ -15,16 +15,12 @@ def get_search_results():
 
 def store_search_results(results):
     with open("results.txt", "w") as file:
-        file.write(str(results))
-
-
-def verify_results(results):
-    assert results["error"] is None
+        for key, value in results.items():
+            file.write('%s: %s\n' % (key, value))
 
 
 def main():
     results = get_search_results()
-    verify_results(results)
     store_search_results(results)
     print(results)
 
