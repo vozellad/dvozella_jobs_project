@@ -1,11 +1,21 @@
-"""Contains values to not be made publicly available on github."""
-from secrets import api_key
+"""Scrapes software developer job listings from Google Jobs in Boston, Massachusetts using serpapi, and saves the
+results to a text file."""
 
-"""Scrapes and parses Google search results"""
+
+from secrets import api_key
 from serpapi import GoogleSearch
 
 
 def get_jobs_results(page_num):
+    """Uses Serpapi to get a page of results from Google Jobs
+
+    Keyword arguments:
+    page-num -- Page of results to be returned
+
+    Returns:
+    List of dictionaries containing information of job listings
+    """
+
     # 10 results per page. Every 10 results is start of page.
     page = (page_num - 1) * 10
 
@@ -25,6 +35,15 @@ def get_jobs_results(page_num):
 
 
 def store_jobs_results(jobs_results):
+    """Stores jobs results into text file
+
+    Keyword arguments:
+    jobs_results -- List of dictionaries containing job information
+
+    Returns:
+    None
+    """
+
     with open(f"jobs_results.txt", "w+") as file:
         for j in jobs_results:
             file.write(str(j) + "\n")
