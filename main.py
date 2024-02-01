@@ -5,11 +5,12 @@ from secrets import api_key
 from serpapi import GoogleSearch
 
 
-def get_search_results(page_num):
+def get_jobs_results(page_num):
     # 10 results per page. Every 10 results is start of page.
     page = (page_num - 1) * 10
 
-    return GoogleSearch({
+    # Get dictionary of Google query
+    search_results = GoogleSearch({
         "engine": "google_jobs",
         "q": "software developer",
         "location": "Boston,Massachusetts",
@@ -17,17 +18,26 @@ def get_search_results(page_num):
         "start": page
     }).get_dict()
 
+    # Only get job data
+    jobs_results = search_results["jobs_results"]
 
-def store_search_results(results, page_num):
-    with open(f"results{page_num}.txt", "w") as file:
-        for key, value in results.items():
-            file.write('%s: %s\n' % (key, value))
+    return jobs_results
+
+
+def store_jobs_results(jobs_results):
+    with open(f"jobs_results.txt", "w+") as file:
+        for j in jobs_results:
+            file.write(str(j) + "\n")
 
 
 def main():
+    # Get jobs
+    jobs_results = []
     for page_num in range(1, 6):
-        results = get_search_results(page_num)
-        store_search_results(results, page_num)
+        jobs_results += get_jobs_results(page_num)
+
+    # Store jobs
+    store_jobs_results(jobs_results)
 
 
 if __name__ == "__main__":
