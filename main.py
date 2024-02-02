@@ -3,6 +3,7 @@ results to a text file."""
 
 from secrets import api_key
 from serpapi import GoogleSearch
+import database
 
 
 def get_jobs_results(page_num):
