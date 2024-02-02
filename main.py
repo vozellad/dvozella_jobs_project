@@ -24,7 +24,7 @@ def get_jobs_results(page_num):
         "engine": "google_jobs",
         "q": "software developer",
         "location": "Boston,Massachusetts",
-        "api_key": api_key,
+        #"api_key": api_key,
         "start": page
     }).get_dict()
 
@@ -50,13 +50,17 @@ def store_jobs_results(jobs_results):
 
 
 def main():
+    # TEMP: commented out code to save tokens because we already have file of data
+
     # Get jobs
-    jobs_results = []
-    for page_num in range(1, 6):
-        jobs_results += get_jobs_results(page_num)
+    #jobs_results = []
+    #for page_num in range(1, 6):
+    #    jobs_results += get_jobs_results(page_num)
 
     # Store jobs
-    store_jobs_results(jobs_results)
+    #store_jobs_results(jobs_results)
+
+    #
 
 
 if __name__ == "__main__":
