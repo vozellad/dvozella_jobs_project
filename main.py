@@ -3,7 +3,7 @@ results to a text file."""
 
 from secrets import api_key
 from serpapi import GoogleSearch
-import database
+import jobs_db
 
 
 def get_jobs_results(page_num):
@@ -60,7 +60,9 @@ def main():
     # Store jobs
     # store_jobs_results(jobs_results)
 
-    pass
+    conn, cursor = jobs_db.open_db("jobs_db.sqlite")
+
+    jobs_db.close_db(conn)
 
 
 if __name__ == "__main__":
