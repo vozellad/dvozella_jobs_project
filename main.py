@@ -1,7 +1,6 @@
 """Scrapes software developer job listings from Google Jobs in Boston, Massachusetts using serpapi, and saves the
 results to a text file."""
 
-
 from secrets import api_key
 from serpapi import GoogleSearch
 
@@ -24,7 +23,7 @@ def get_jobs_results(page_num):
         "engine": "google_jobs",
         "q": "software developer",
         "location": "Boston,Massachusetts",
-        #"api_key": api_key,
+        # "api_key": api_key,
         "start": page
     }).get_dict()
 
@@ -53,14 +52,14 @@ def main():
     # TEMP: commented out code to save tokens because we already have file of data
 
     # Get jobs
-    #jobs_results = []
-    #for page_num in range(1, 6):
+    # jobs_results = []
+    # for page_num in range(1, 6):
     #    jobs_results += get_jobs_results(page_num)
 
     # Store jobs
-    #store_jobs_results(jobs_results)
+    # store_jobs_results(jobs_results)
 
-    #
+    pass
 
 
 if __name__ == "__main__":
