@@ -16,8 +16,9 @@ def setup_db(cursor):
     # TEMP: testing code
     cursor.execute('''DROP TABLE IF EXISTS jobs;''')
     cursor.execute('''DROP TABLE IF EXISTS related_links;''')
+    cursor.execute('''DROP TABLE IF EXISTS qualifications;''')
 
-    cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
+    cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (
     job_id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     company_name TEXT NOT NULL,
@@ -31,6 +32,13 @@ def setup_db(cursor):
     link_id INTEGER PRIMARY KEY,
     job_id INTEGER NOT NULL,
     url TEXT NOT NULL,
+    FOREIGN KEY (job_id) REFERENCES jobs(job_id)
+    );''')
+
+    cursor.execute('''CREATE TABLE qualifications (
+    qualification_id INTEGER PRIMARY KEY,
+    job_id INTEGER NOT NULL,
+    qualification TEXT NOT NULL,
     FOREIGN KEY (job_id) REFERENCES jobs(job_id)
     );''')
 
@@ -52,3 +60,8 @@ def insert_jobs(cursor, jobs):
         for link in links:
             cursor.execute('''INSERT INTO related_links (job_id, url)
                               VALUES (?, ?);''', (j["job_id"], link["link"]))
+
+        qualifications = j["job_highlights"][0].get("items")
+        for q in qualifications:
+            cursor.execute('''INSERT INTO qualifications (job_id, qualification)
+                              VALUES (?, ?)''', (j["job_id"], q))
