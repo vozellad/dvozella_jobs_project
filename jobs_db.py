@@ -22,7 +22,9 @@ def setup_db(cursor):
     title TEXT NOT NULL,
     company_name TEXT NOT NULL,
     location TEXT NOT NULL,
-    description TEXT NOT NULL
+    description TEXT NOT NULL,
+    posted_at TEXT NOT NULL,
+    salary TEXT DEFAULT ""
     );''')
 
     cursor.execute('''CREATE TABLE related_links (
@@ -34,14 +36,16 @@ def setup_db(cursor):
 
 
 def insert_jobs(cursor, jobs):
-    column_names = ["job_id", "title", "company_name", "location", "description"]
+    column_names = ["job_id", "title", "company_name", "location", "description", "posted_at", "salary"]
     columns_str = ", ".join(column_names)
     placeholders_str = ", ".join("?" * len(column_names))
     sql_command = f'''INSERT OR IGNORE INTO jobs ({columns_str})
                       VALUES ({placeholders_str});'''
 
     for j in jobs:
-        params = tuple(j[col] for col in column_names[:5])
+        posted_at = j["detected_extensions"].get("posted_at", "")
+        salary = j["detected_extensions"].get("salary", "")
+        params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary)
         cursor.execute(sql_command, params)
 
         links = j["related_links"]
