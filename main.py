@@ -10,25 +10,20 @@ def get_jobs_results(page):
     """Uses Serpapi to get a page of results from Google Jobs
 
     Keyword arguments:
-    page_num -- Page of results to be returned. Starts at 0
+    page -- Page of results to be returned. Starts at 0
 
     Returns:
     List of dictionaries containing information of job listings
     """
 
-    # Get dictionary of Google query
-    search_results = GoogleSearch({
+    # Get jobs data via Google query
+    return GoogleSearch({
         "engine": "google_jobs",
         "q": "software developer",
         "location": "Boston,Massachusetts",
-        # "api_key": api_key,
+        "api_key": api_key,
         "start": page * 10  # 10 results per page. Every 10 results is start of page.
-    }).get_dict()
-
-    # Only get job data
-    jobs_results = search_results["jobs_results"]
-
-    return jobs_results
+    }).get_dict()["jobs_results"]
 
 
 def store_jobs_results(jobs_results):
