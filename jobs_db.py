@@ -13,7 +13,9 @@ def close_db(connection):
 
 
 def setup_db(cursor):
-    cursor.execute('''DROP TABLE IF EXISTS jobs;''')  # TEMP: testing code
+    # TEMP: testing code
+    cursor.execute('''DROP TABLE IF EXISTS jobs;''')
+    cursor.execute('''DROP TABLE IF EXISTS related_links;''')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
     job_id TEXT PRIMARY KEY,
@@ -21,6 +23,13 @@ def setup_db(cursor):
     company_name TEXT NOT NULL,
     location TEXT NOT NULL,
     description TEXT NOT NULL
+    );''')
+
+    cursor.execute('''CREATE TABLE related_links (
+    link_id INTEGER PRIMARY KEY,
+    job_id INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    FOREIGN KEY (job_id) REFERENCES jobs(job_id)
     );''')
 
 
@@ -34,3 +43,8 @@ def insert_jobs(cursor, jobs):
     for j in jobs:
         params = tuple(j[col] for col in column_names[:5])
         cursor.execute(sql_command, params)
+
+        links = j["related_links"]
+        for link in links:
+            cursor.execute('''INSERT INTO related_links (job_id, url)
+                              VALUES (?, ?);''', (j["job_id"], link["link"]))
