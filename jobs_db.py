@@ -56,10 +56,10 @@ def insert_jobs(cursor, jobs):
         params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary)
         cursor.execute(sql_command, params)
 
-        links = j["related_links"]
+        links = [d["link"] for d in j["related_links"]]
         for link in links:
             cursor.execute('''INSERT INTO related_links (job_id, url)
-                              VALUES (?, ?);''', (j["job_id"], link["link"]))
+                              VALUES (?, ?);''', (j["job_id"], link))
 
         qualifications = j["job_highlights"][0].get("items")
         for q in qualifications:
