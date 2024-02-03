@@ -42,21 +42,13 @@ def store_jobs_results(jobs_results):
 
 
 def main():
-    # TEMP: commented out some code to save tokens because we already have file of data
-
     # Get jobs
     jobs_results = []
-    # TEMP: testing code
-    import urllib.request, json
-    link = "https://serpapi.com/searches/bb40edbe759e05dd/65bb0638681ebec82b6b5a68.json"
-    with urllib.request.urlopen(link) as url:
-        jobs_results = json.load(url)["jobs_results"]
-
-    # for page in range(5):
-    #    jobs_results += get_jobs_results(page)
+    for page in range(5):
+        jobs_results += get_jobs_results(page)
 
     # Store jobs
-    # store_jobs_results(jobs_results)
+    store_jobs_results(jobs_results)
 
     conn, cursor = jobs_db.open_db("jobs_db.sqlite")
     jobs_db.setup_db(cursor)
