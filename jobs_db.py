@@ -87,6 +87,7 @@ def insert_jobs(cursor, jobs):
     None
     """
 
+    # Create string of SQL command used to insert new row into jobs table
     column_names = ["job_id", "title", "company_name", "location", "description", "posted_at", "salary"]
     columns_str = ", ".join(column_names)
     placeholders_str = ", ".join("?" * len(column_names))
@@ -94,17 +95,23 @@ def insert_jobs(cursor, jobs):
                       VALUES ({placeholders_str});'''
 
     for j in jobs:
+        # Get SQL data parameters for new table row
         posted_at = j["detected_extensions"].get("posted_at", "")
         salary = j["detected_extensions"].get("salary", "")
         params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary)
+        # Insert data into jobs table as new row
         cursor.execute(sql_command, params)
 
+        # Get all links of current listing
         links = [d["link"] for d in j["related_links"]]
+        # Insert every link individually into related_links table
         for link in links:
             cursor.execute('''INSERT INTO related_links (job_id, url)
                               VALUES (?, ?);''', (j["job_id"], link))
 
+        # Get all qualifications of current listing
         qualifications = j["job_highlights"][0].get("items")
+        # Insert every qualification individually into qualifications table
         for q in qualifications:
             cursor.execute('''INSERT INTO qualifications (job_id, qualification)
                               VALUES (?, ?)''', (j["job_id"], q))
