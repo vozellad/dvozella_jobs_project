@@ -1,3 +1,7 @@
+"""Module for handling database for jobs. Includes creating, updating, and deleting jobs data.
+"""
+
+
 import sqlite3
 
 
@@ -5,10 +9,10 @@ def open_db(filename):
     """Open a connection to a(n) SQLite database file and return the database connection and cursor.
 
     Keyword arguments:
-    filename -- The name of the database file to connect to.
+    filename -- The name of the database file to connect to
 
     Returns:
-    A tuple of the database connection and cursor.
+    A tuple of the database connection and cursor
     """
 
     db_connection = sqlite3.connect(filename)
@@ -17,6 +21,15 @@ def open_db(filename):
 
 
 def close_db(connection):
+    """Commit any pending transaction to the database and close the connection.
+
+    Keyword arguments:
+    connection -- Database connection object to be closed
+
+    Returns:
+    None
+    """
+
     connection.commit()
     connection.close()
 
