@@ -1,9 +1,16 @@
+"""Testing functions in jobs_db.py."""
+
+
 import pytest
 import jobs_db
 import sqlite3
 
 
 def test_jobs_db():
+    """Tests the entire process of handling database for jobs.
+    Testing includes creating, updating, and deleting jobs data.
+    """
+
     db_connection = sqlite3.connect("test_jobs_db.sqlite")
     cursor = db_connection.cursor()
 
@@ -22,6 +29,8 @@ def test_jobs_db():
     }
 
     jobs_db.insert_jobs(cursor, [job])
+
+    # Get and confirm data in tables are accurately inserted
 
     cursor.execute("SELECT * FROM jobs")
     fetch = cursor.fetchone()
