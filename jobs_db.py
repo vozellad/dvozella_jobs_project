@@ -22,11 +22,6 @@ def close_db(connection):
 
 
 def setup_db(cursor):
-    # TEMP: testing code
-    cursor.execute('''DROP TABLE IF EXISTS jobs;''')
-    cursor.execute('''DROP TABLE IF EXISTS related_links;''')
-    cursor.execute('''DROP TABLE IF EXISTS qualifications;''')
-
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (
     job_id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
