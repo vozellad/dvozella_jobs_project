@@ -25,7 +25,7 @@ def test_jobs_db():
         "company_name": "Studious Studios",
         "location": "Austin, Indiana",
         "description": "Developing Applications",
-        "detected_extensions": {"posted_at": "3 days ago", "salary": "10K–12K a year"},
+        "detected_extensions": {"posted_at": "3 days ago", "salary": "10K–12K a year", 'work_from_home': True},
         "related_links": [{"link": "google.com"}, {"link": "something.com"}],
         "job_highlights": [{"items": ["React", "Python"]}]
     }
@@ -44,6 +44,7 @@ def test_jobs_db():
     assert fetch[4] == "Developing Applications"
     assert fetch[5] == "3 days ago"
     assert fetch[6] == "10K–12K a year"
+    assert fetch[7] == True
 
     cursor.execute("SELECT * FROM related_links")
     fetch = cursor.fetchall()
