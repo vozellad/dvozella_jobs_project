@@ -2,6 +2,15 @@ import sqlite3
 
 
 def open_db(filename):
+    """Open a connection to a(n) SQLite database file and return the database connection and cursor.
+
+    Keyword arguments:
+    filename -- The name of the database file to connect to.
+
+    Returns:
+    A tuple of the database connection and cursor.
+    """
+
     db_connection = sqlite3.connect(filename)
     cursor = db_connection.cursor()
     return db_connection, cursor
