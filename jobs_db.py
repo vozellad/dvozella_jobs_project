@@ -107,6 +107,7 @@ def insert_jobs(cursor, jobs):
         posted_at = j["detected_extensions"].get("posted_at", "")
         salary = j["detected_extensions"].get("salary", "")
         work_from_home = j["detected_extensions"].get("work_from_home", "")
+        # List comprehension code must change if in the future table columns and jobs key names no longer match
         params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary, work_from_home)
         # Insert data into jobs table as new row
         cursor.execute(sql_command, params)
