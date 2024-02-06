@@ -15,6 +15,8 @@ def test_jobs_db():
     cursor = db_connection.cursor()
 
     cursor.execute('''DROP TABLE IF EXISTS jobs;''')
+    cursor.execute('''DROP TABLE IF EXISTS related_links;''')
+    cursor.execute('''DROP TABLE IF EXISTS qualifications;''')
     jobs_db.setup_db(cursor)
 
     job = {
