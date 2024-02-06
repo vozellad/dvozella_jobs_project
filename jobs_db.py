@@ -76,10 +76,12 @@ def setup_db(cursor):
 
 
 def insert_jobs(cursor, jobs):
-    """
+    """Based on the structure of data given by Serpapi, get the relevant data and insert it into the appropriate tables.
+    Serpapi data structure is a list of dictionaries with each dict being a job.
 
     Keyword arguments:
-
+    cursor -- Used to insert values into the appropriate tables
+    jobs -- List of dictionaries with each dict being a job
 
     Returns:
     None
