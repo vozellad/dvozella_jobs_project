@@ -58,7 +58,7 @@ def setup_db(cursor):
     description TEXT NOT NULL,
     posted_at TEXT DEFAULT "",
     salary TEXT DEFAULT "",
-    work_from_home BOOLEAN
+    work_from_home BOOLEAN DEFAULT FALSE
     );''')
 
     cursor.execute('''CREATE TABLE related_links (
