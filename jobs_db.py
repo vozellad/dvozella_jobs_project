@@ -35,6 +35,21 @@ def close_db(connection):
 
 
 def setup_db(cursor):
+    """
+    Create 3 tables in the database.
+    First called 'jobs' is the main table meant to store data of each listing.
+    Second table called 'related_links' is itself a piece of data for the first table but meant to store multiple links
+    for each listing.
+    Third table called 'qualifications' is similar to the second table but stores the multiple qualifications instead of
+    links.
+
+    Keyword arguments:
+    connection -- Database connection object used to execute code to create tables
+
+    Returns:
+    None
+    """
+
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (
     job_id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
