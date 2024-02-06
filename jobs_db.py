@@ -44,7 +44,7 @@ def setup_db(cursor):
     links.
 
     Keyword arguments:
-    connection -- Database connection object used to execute code to create tables
+    cursor -- Used to execute SQL code to create tables
 
     Returns:
     None
@@ -76,6 +76,15 @@ def setup_db(cursor):
 
 
 def insert_jobs(cursor, jobs):
+    """
+
+    Keyword arguments:
+
+
+    Returns:
+    None
+    """
+
     column_names = ["job_id", "title", "company_name", "location", "description", "posted_at", "salary"]
     columns_str = ", ".join(column_names)
     placeholders_str = ", ".join("?" * len(column_names))
