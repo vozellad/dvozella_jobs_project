@@ -56,8 +56,9 @@ def setup_db(cursor):
     company_name TEXT NOT NULL,
     location TEXT NOT NULL,
     description TEXT NOT NULL,
-    posted_at TEXT NOT NULL,
-    salary TEXT DEFAULT ""
+    posted_at TEXT DEFAULT "",
+    salary TEXT DEFAULT "",
+    work_from_home BOOLEAN
     );''')
 
     cursor.execute('''CREATE TABLE related_links (
@@ -88,7 +89,14 @@ def insert_jobs(cursor, jobs):
     """
 
     # Create string of SQL command used to insert new row into jobs table
-    column_names = ["job_id", "title", "company_name", "location", "description", "posted_at", "salary"]
+    column_names = ["job_id",
+                    "title",
+                    "company_name",
+                    "location",
+                    "description",
+                    "posted_at",
+                    "salary",
+                    "work_from_home"]
     columns_str = ", ".join(column_names)
     placeholders_str = ", ".join("?" * len(column_names))
     sql_command = f'''INSERT OR IGNORE INTO jobs ({columns_str})
@@ -98,7 +106,8 @@ def insert_jobs(cursor, jobs):
         # Get SQL data parameters for new table row
         posted_at = j["detected_extensions"].get("posted_at", "")
         salary = j["detected_extensions"].get("salary", "")
-        params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary)
+        work_from_home = j["detected_extensions"].get("work_from_home", "")
+        params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary, work_from_home)
         # Insert data into jobs table as new row
         cursor.execute(sql_command, params)
 
