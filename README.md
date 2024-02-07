@@ -14,4 +14,6 @@ Also makes a database and stores it in 3 tables: 'jobs', 'related_links', and 'q
 Run the file, then view the text file it wrote to named 'jobs_results.txt'.<br>
 Also use an application such as 'DB Browser for SQLite' to view the database.<br>
 
-Nothing is missing up to sprint 2 (except for linter error which will be corrected soon).
+Things missing for Sprint 2:<br>
+Salary is retrieved from data, but if salary isn't there, program does not attempt to retrieve data from job_highlights.<br>
+Whether the job is remote is recorded, but it does not account for when remote is not available but location says "anywhere".<br>
