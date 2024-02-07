@@ -1,8 +1,7 @@
 Authors: Demetrios Vozella<br>
 
 Project uses Python 3.10.<br><br>
-Install Python modules 'serpapi' and 'google-search-results' for 'GoogleSearch'.<br>
-Also install Python module 'sqlite3' and optionally install application 'DB Browser for SQLite' to view data.<br>
+Install Python module 'sqlite3' and optionally install application 'DB Browser for SQLite' to view data.<br>
 
 Create 'my_secrets.py' in the project directory, and initialize an 'api_key' variable with your api key.<br>
 The 'my_secrets.py' should be in the follwing format:&emsp;```api_key="your api key here"```<br>
