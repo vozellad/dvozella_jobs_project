@@ -16,4 +16,3 @@ Also use an application such as 'DB Browser for SQLite' to view the database.<br
 
 Things missing for Sprint 2:<br>
 Salary is retrieved from data, but if salary isn't there, program does not attempt to retrieve data from job_highlights.<br>
-Whether the job is remote is recorded, but it does not account for when remote is not available but location says "anywhere".<br>

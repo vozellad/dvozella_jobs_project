@@ -107,6 +107,10 @@ def insert_jobs(cursor, jobs):
         posted_at = j["detected_extensions"].get("posted_at", "")
         salary = j["detected_extensions"].get("salary", "")
         work_from_home = j["detected_extensions"].get("work_from_home", "")
+        # If work_from_home empty but location has "anywhere", the job is considered remote
+        if work_from_home == "" and j["location"].strip().lower() == "anywhere":
+            work_from_home = True
+
         # List comprehension code must change if in the future table columns and jobs key names no longer match
         params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary, work_from_home)
         # Insert data into jobs table as new row
