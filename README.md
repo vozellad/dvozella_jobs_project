@@ -4,8 +4,8 @@ Project uses Python 3.10.<br><br>
 Install Python modules 'serpapi' and 'google-search-results' for 'GoogleSearch'.<br>
 Also install Python module 'sqlite3' and optionally install application 'DB Browser for SQLite' to view data.<br>
 
-Create 'secrets.py' in the project directory, and initialize an 'api_key' variable with your api key.<br>
-The secrets.py should be in the follwing format:&emsp;```api_key="your api key here"```<br>
+Create 'my_secrets.py' in the project directory, and initialize an 'api_key' variable with your api key.<br>
+The 'my_secrets.py' should be in the follwing format:&emsp;```api_key="your api key here"```<br>
 
 Gets 5 pages google search jobs results, and stores the results in a text file.<br>
 Also makes a database and stores it in 3 tables: 'jobs', 'related_links', and 'qualifications'.<br>
