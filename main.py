@@ -1,7 +1,7 @@
 """Scrapes software developer job listings from Google Jobs in Boston, Massachusetts using serpapi, and saves the
 results to a text file."""
 
-from secrets import api_key
+from my_secrets import api_key
 from serpapi import GoogleSearch
 import jobs_db
 
