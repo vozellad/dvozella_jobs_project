@@ -15,5 +15,6 @@ Run the file, then view the text file it wrote to named 'jobs_results.txt'.<br>
 Also use an application such as 'DB Browser for SQLite' to view the database.<br>
 
 Things missing for Sprint 2:<br>
-Salary is retrieved from data, but if salary isn't there, program does not attempt to retrieve data from job_highlights. 
+Salary is retrieved from 'salary' key in data, but if salary isn't there, program does not attempt to retrieve data 
+from alternate location 'job_highlights'. 
 I was unable to find a consistent location for the alternative salary placement to retrieve it.<br>
