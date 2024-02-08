@@ -54,8 +54,8 @@ def setup_db(cursor):
     job_id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     company_name TEXT NOT NULL,
-    location TEXT NOT NULL,
-    description TEXT NOT NULL,
+    location TEXT DEFAULT "",
+    description TEXT DEFAULT "",
     posted_at TEXT DEFAULT "",
     salary TEXT DEFAULT "",
     work_from_home BOOLEAN DEFAULT FALSE
