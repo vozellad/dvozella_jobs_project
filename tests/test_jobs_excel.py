@@ -40,6 +40,6 @@ def test_get_jobs():
     assert fetch[4] == ""
     assert fetch[5] == jobs[0][5]
     assert fetch[6] == jobs[0][6]
-    assert fetch[7] is ""
+    assert fetch[7] == ""
 
     jobs_db.close_db(db_connection)
