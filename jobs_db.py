@@ -111,4 +111,3 @@ def insert_jobs(cursor, jobs):
         for q in qualifications:
             cursor.execute('''INSERT INTO qualifications (job_id, qualification)
                               VALUES (?, ?)''', (j[0], q))
-

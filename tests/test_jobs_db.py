@@ -1,6 +1,5 @@
 """Testing functions in jobs_db.py."""
 
-
 import pytest
 import jobs_db
 import sqlite3
@@ -30,6 +29,9 @@ def test_jobs_db():
         "job_highlights": [{"items": ["React", "Python"]}]
     }
 
+    job = ("asdf1234", "Software Engineer Intern", "Studious Studios", "Austin, Indiana", "Developing Applications",
+           "3 days ago", "10K-12K a year", True, ["google.com", "something.com"], ["React", "Python"])
+
     jobs_db.insert_jobs(cursor, [job])
 
     # Get and confirm data in tables are accurately inserted
@@ -43,7 +45,7 @@ def test_jobs_db():
     assert fetch[3] == "Austin, Indiana"
     assert fetch[4] == "Developing Applications"
     assert fetch[5] == "3 days ago"
-    assert fetch[6] == "10K–12K a year"
+    assert fetch[6] == "10K-12K a year"
     assert fetch[7] == True
 
     cursor.execute("SELECT * FROM related_links")
