@@ -76,13 +76,13 @@ def setup_db(cursor):
     );''')
 
 
-def insert_jobs(cursor, jobs):
+def _insert_job(cursor, job):
     """Insert given data into database.
     Data in jobs must be ordered correctly. If no data for something, give it empty value.
 
     Keyword arguments:
     cursor -- Used to insert values into the appropriate tables
-    jobs -- List of tuples of jobs
+    job -- Tuples of job
             Order of data: (job_id, title, company_name, location, description, posted_at, salary,
                             remote, links, qualifications)
 
@@ -97,17 +97,40 @@ def insert_jobs(cursor, jobs):
     sql_command = f'''INSERT OR IGNORE INTO jobs ({columns_str})
                       VALUES ({placeholders_str});'''
 
+    cursor.execute(sql_command, job[:8])
+
+    # Insert every link individually into related_links table
+    links = job[8]
+    for link in links:
+        cursor.execute('''INSERT INTO related_links (job_id, url)
+                                  VALUES (?, ?);''', (job[0], link))
+
+    # Insert every qualification individually into qualifications table
+    qualifications = job[9]
+    for q in qualifications:
+        cursor.execute('''INSERT INTO qualifications (job_id, qualification)
+                                  VALUES (?, ?)''', (job[0], q))
+
+
+def insert_jobs(cursor, jobs):
+    """Insert given data into database.
+    Data in jobs must be ordered correctly. If no data for something, give it empty value.
+    Uses _insert_jobs() to catch exceptions.
+
+    Keyword arguments:
+    cursor -- Used to insert values into the appropriate tables
+    jobs -- List of tuples of jobs
+            Order of data: (job_id, title, company_name, location, description, posted_at, salary,
+                            remote, links, qualifications)
+
+    Returns:
+    None
+    """
+
     for j in jobs:
-        cursor.execute(sql_command, j[:8])
-
-        # Insert every link individually into related_links table
-        links = j[8]
-        for link in links:
-            cursor.execute('''INSERT INTO related_links (job_id, url)
-                              VALUES (?, ?);''', (j[0], link))
-
-        # Insert every qualification individually into qualifications table
-        qualifications = j[9]
-        for q in qualifications:
-            cursor.execute('''INSERT INTO qualifications (job_id, qualification)
-                              VALUES (?, ?)''', (j[0], q))
+        try:
+            _insert_job(cursor, j)
+        except sqlite3.IntegrityError:
+            print(f"Error inserting job {j[0]}. It's already there.")
+        except sqlite3.OperationalError as e:
+            print(f"Error inserting job {e}.")
