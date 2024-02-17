@@ -58,7 +58,7 @@ def setup_db(cursor):
     description TEXT DEFAULT "",
     posted_at TEXT DEFAULT "",
     salary TEXT DEFAULT "",
-    work_from_home BOOLEAN DEFAULT FALSE
+    remote BOOLEAN DEFAULT FALSE
     );''')
 
     cursor.execute('''CREATE TABLE related_links (
@@ -77,55 +77,37 @@ def setup_db(cursor):
 
 
 def insert_jobs(cursor, jobs):
-    """Based on the structure of data given by Serpapi, get the relevant data and insert it into the appropriate tables.
-    Serpapi data structure is a list of dictionaries with each dict being a job.
+    """Insert given data into database.
+    Data in jobs must be ordered correctly. If no data for something, give it empty value.
 
     Keyword arguments:
     cursor -- Used to insert values into the appropriate tables
-    jobs -- List of dictionaries with each dict being a job
+    jobs -- List of tuples of jobs
+            Order of data: (job_id, title, company_name, location, description, posted_at, salary,
+                            remote, links, qualifications)
 
     Returns:
     None
     """
 
     # Create string of SQL command used to insert new row into jobs table
-    column_names = ["job_id",
-                    "title",
-                    "company_name",
-                    "location",
-                    "description",
-                    "posted_at",
-                    "salary",
-                    "work_from_home"]
+    column_names = ["job_id", "title", "company_name", "location", "description", "posted_at", "salary", "remote"]
     columns_str = ", ".join(column_names)
     placeholders_str = ", ".join("?" * len(column_names))
     sql_command = f'''INSERT OR IGNORE INTO jobs ({columns_str})
                       VALUES ({placeholders_str});'''
 
     for j in jobs:
-        # Get SQL data parameters for new table row
-        posted_at = j["detected_extensions"].get("posted_at", "")
-        salary = j["detected_extensions"].get("salary", "")
-        work_from_home = j["detected_extensions"].get("work_from_home", "")
-        # If work_from_home empty but location has "anywhere", the job is considered remote
-        if work_from_home == "" and j["location"].strip().lower() == "anywhere":
-            work_from_home = True
+        cursor.execute(sql_command, j[:8])
 
-        # List comprehension code must change if in the future table columns and jobs key names no longer match
-        params = tuple(j[col] for col in column_names[:5]) + (posted_at, salary, work_from_home)
-        # Insert data into jobs table as new row
-        cursor.execute(sql_command, params)
-
-        # Get all links of current listing
-        links = [d["link"] for d in j["related_links"]]
         # Insert every link individually into related_links table
+        links = j[8]
         for link in links:
             cursor.execute('''INSERT INTO related_links (job_id, url)
-                              VALUES (?, ?);''', (j["job_id"], link))
+                              VALUES (?, ?);''', (j[0], link))
 
-        # Get all qualifications of current listing
-        qualifications = j["job_highlights"][0].get("items")
         # Insert every qualification individually into qualifications table
+        qualifications = j[9]
         for q in qualifications:
             cursor.execute('''INSERT INTO qualifications (job_id, qualification)
-                              VALUES (?, ?)''', (j["job_id"], q))
+                              VALUES (?, ?)''', (j[0], q))
