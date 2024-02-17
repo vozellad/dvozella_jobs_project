@@ -7,24 +7,27 @@ from my_secrets import api_key
 from serpapi import GoogleSearch
 
 
-def get_jobs(page):
-    """Uses Serpapi to get a page of results from Google Jobs
+def get_jobs(page_amt):
+    """Uses Serpapi to get results from Google Jobs
 
     Keyword arguments:
-    page -- Page of results to be returned. Starts at 0
+    page -- Amount of pages of results to be returned. Starts at 0
 
     Returns:
-    List of dictionaries containing information of job listings
+    List of dictionaries containing job listings
     """
 
-    # Get jobs data via Google query
-    return GoogleSearch({
-        "engine": "google_jobs",
-        "q": "software developer",
-        "location": "Boston,Massachusetts",
-        "api_key": api_key,
-        "start": page * 10  # 10 results per page. Every 10 results is start of page.
-    }).get_dict()["jobs_results"]
+    jobs = []
+    for p in range(page_amt):
+        jobs += GoogleSearch({
+            "engine": "google_jobs",
+            "q": "software developer",
+            "location": "Boston,Massachusetts",
+            "api_key": api_key,
+            "start": page_amt * p  # 10 results per page. Every 10 results is start of page.
+        }).get_dict()["jobs_results"]
+
+    return jobs
 
 
 def store_jobs(jobs):

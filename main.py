@@ -6,11 +6,7 @@ import jobs_results
 
 
 def main():
-    # Get jobs
-    jobs = []
-    for page in range(5):
-        jobs += jobs_results.get_jobs(page)
-    # Write jobs to file
+    jobs = jobs_results.get_jobs(5)
     jobs_results.store_jobs(jobs)
 
     conn, cursor = jobs_db.open_db("jobs_db.sqlite")
