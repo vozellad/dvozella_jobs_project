@@ -82,3 +82,4 @@ def prepare_jobs_for_db(jobs):
                           work_from_home, links, qualifications)]
 
     return prepared_jobs
+
