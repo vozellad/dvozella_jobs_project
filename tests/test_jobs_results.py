@@ -2,13 +2,13 @@
 
 
 import pytest
-import main
+import jobs_results
 
 
 def test_main():
     """Tests if method retrieves data using Serpapi and assures it gets at least 50 job listings."""
 
-    jobs_results = []
+    jobs = []
     for page in range(5):
-        jobs_results += main.get_jobs_results(page)
-    assert len(jobs_results) >= 50
+        jobs += jobs_results.get_jobs(page)
+    assert len(jobs) >= 50
