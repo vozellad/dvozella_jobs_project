@@ -33,10 +33,10 @@ def get_jobs():
         if row[7] == row[6]:
             salary = str(row[7])
         else:
-            salary = f"{row[7]}-{row[6]}"
+            salary = f"{row[7]} - {row[6]}"
         if row[8] != "N/A":
             salary += f" {row[8]}"
 
-        jobs += [(row[2], row[9], row[0], row[4], "", row[1], salary, None, [], [])]
+        jobs += [(row[2], row[9], row[0], row[4], "", row[1], salary, "", [], [])]
 
     return jobs

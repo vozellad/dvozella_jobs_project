@@ -12,22 +12,10 @@ def test_jobs_db():
 
     db_connection = sqlite3.connect("test_jobs_db.sqlite")
     cursor = db_connection.cursor()
-
     cursor.execute('''DROP TABLE IF EXISTS jobs;''')
     cursor.execute('''DROP TABLE IF EXISTS related_links;''')
     cursor.execute('''DROP TABLE IF EXISTS qualifications;''')
     jobs_db.setup_db(cursor)
-
-    job = {
-        "job_id": "asdf1234",
-        "title": "Software Engineer Intern",
-        "company_name": "Studious Studios",
-        "location": "Austin, Indiana",
-        "description": "Developing Applications",
-        "detected_extensions": {"posted_at": "3 days ago", "salary": "10K–12K a year", 'work_from_home': True},
-        "related_links": [{"link": "google.com"}, {"link": "something.com"}],
-        "job_highlights": [{"items": ["React", "Python"]}]
-    }
 
     job = ("asdf1234", "Software Engineer Intern", "Studious Studios", "Austin, Indiana", "Developing Applications",
            "3 days ago", "10K-12K a year", True, ["google.com", "something.com"], ["React", "Python"])
