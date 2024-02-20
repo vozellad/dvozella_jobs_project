@@ -8,6 +8,10 @@ import sqlite3
 
 
 def test_get_jobs():
+    """Tests if records from Excel file are retrieved correctly.
+    Tests to make sure data goes into table.
+    """
+
     jobs = jobs_excel.get_jobs()
 
     assert len(jobs) == 750
