@@ -61,14 +61,14 @@ def setup_db(cursor):
     remote BOOLEAN DEFAULT FALSE
     );''')
 
-    cursor.execute('''CREATE TABLE related_links (
+    cursor.execute('''CREATE TABLE IF NOT EXISTS related_links (
     link_id INTEGER PRIMARY KEY,
     job_id INTEGER NOT NULL,
     url TEXT NOT NULL,
     FOREIGN KEY (job_id) REFERENCES jobs(job_id)
     );''')
 
-    cursor.execute('''CREATE TABLE qualifications (
+    cursor.execute('''CREATE TABLE IF NOT EXISTS qualifications (
     qualification_id INTEGER PRIMARY KEY,
     job_id INTEGER NOT NULL,
     qualification TEXT NOT NULL,
@@ -102,13 +102,13 @@ def _insert_job(cursor, job):
     # Insert every link individually into related_links table
     links = job[8]
     for link in links:
-        cursor.execute('''INSERT INTO related_links (job_id, url)
+        cursor.execute('''INSERT OR IGNORE INTO related_links (job_id, url)
                                   VALUES (?, ?);''', (job[0], link))
 
     # Insert every qualification individually into qualifications table
     qualifications = job[9]
     for q in qualifications:
-        cursor.execute('''INSERT INTO qualifications (job_id, qualification)
+        cursor.execute('''INSERT OR IGNORE INTO qualifications (job_id, qualification)
                                   VALUES (?, ?)''', (job[0], q))
 
 
