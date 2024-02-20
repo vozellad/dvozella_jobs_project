@@ -92,30 +92,29 @@ def prepare_jobs_for_db(jobs):
 def get_highlights_section(highlights, title):
     for section in highlights:
         if section.get("title") == title:
-            return section
+            return section.get("items")
     return ""
 
 
-def get_salary(benefits_section: dict, job_description: str):
+def get_salary(benefits: dict, job_description: str):
     """Looks for salary in multiple places."""
-    # Code provided by professor
+    # Code provided by professor with student modifications
     min_salary = 0
     max_salary = 0
-    if benefits_section:  # if we got a dictionary with stuff in it
-        for benefit_item in benefits_section['items']:
-            if 'range' in benefit_item.lower():
-                # from https://stackoverflow.com/questions/63714217/how-can-i-extract-numbers-containing-commas-from
-                # -strings-in-python
-                numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
-                if numbers:  # if we found salary data, return it
-                    return float(numbers[0].replace(',', '')), float(numbers[1].replace(',', ''))
-            numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
-            if len(numbers) == 2 and int(
-                    # some jobs just put the numbers in one item and the description in another
-                    numbers[0].replace(',', '')) > 30:
+    for item in benefits:
+        if 'range' in item.lower():
+            # from https://stackoverflow.com/questions/63714217/how-can-i-extract-numbers-containing-commas-from
+            # -strings-in-python
+            numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', item)
+            if numbers:  # if we found salary data, return it
                 return float(numbers[0].replace(',', '')), float(numbers[1].replace(',', ''))
-            else:
-                return min_salary, max_salary
+        numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', item)
+        if len(numbers) == 2 and int(
+                # some jobs just put the numbers in one item and the description in another
+                numbers[0].replace(',', '')) > 30:
+            return float(numbers[0].replace(',', '')), float(numbers[1].replace(',', ''))
+        else:
+            return min_salary, max_salary
     location = job_description.find("salary range")
     if location < 0:
         location = job_description.find("pay range")
