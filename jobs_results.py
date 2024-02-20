@@ -1,6 +1,4 @@
-"""Functions to scrape software developer job listings from Google Jobs in Boston, Massachusetts using serpapi, and save
-the results to a text file.
-"""
+"""Module for handling Serpapi data."""
 
 from my_secrets import api_key
 from serpapi import GoogleSearch
@@ -69,7 +67,7 @@ def prepare_jobs_for_db(jobs):
         salary = j["detected_extensions"].get("salary", "")
         work_from_home = j["detected_extensions"].get("work_from_home", "")
 
-        # If work_from_home empty but location has "anywhere", the job is considered remote
+        # If work_from_home empty but location has "anywhere", the job is considered remote1
         if work_from_home == "" and j["location"].strip().lower() == "anywhere":
             work_from_home = True
 
@@ -77,7 +75,8 @@ def prepare_jobs_for_db(jobs):
 
         # If salary wasn't in assigned location, it might be in another location
         if salary == "":
-            get_salary(benefits, j["description"])
+            min_salary, max_salary = get_salary(benefits, j["description"])
+            salary = get_salary_format(min_salary, max_salary)
 
         # Get all links of current listing
         links = [d.get("link") for d in j["related_links"]]
@@ -94,10 +93,12 @@ def get_highlights_section(highlights, title):
     for section in highlights:
         if section.get("title") == title:
             return section
+    return ""
 
 
 def get_salary(benefits_section: dict, job_description: str):
-    """Code provided by professor. Looks for salary in multiple places."""
+    """Looks for salary in multiple places."""
+    # Code provided by professor
     min_salary = 0
     max_salary = 0
     if benefits_section:  # if we got a dictionary with stuff in it
@@ -107,12 +108,12 @@ def get_salary(benefits_section: dict, job_description: str):
                 # -strings-in-python
                 numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
                 if numbers:  # if we found salary data, return it
-                    return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+                    return float(numbers[0].replace(',', '')), float(numbers[1].replace(',', ''))
             numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
             if len(numbers) == 2 and int(
                     # some jobs just put the numbers in one item and the description in another
                     numbers[0].replace(',', '')) > 30:
-                return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+                return float(numbers[0].replace(',', '')), float(numbers[1].replace(',', ''))
             else:
                 return min_salary, max_salary
     location = job_description.find("salary range")
@@ -122,5 +123,22 @@ def get_salary(benefits_section: dict, job_description: str):
         return min_salary, max_salary
     numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', job_description[location:location + 50])
     if numbers:
-        return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+        return float(numbers[0].replace(',', '')), float(numbers[1].replace(',', ''))
     return min_salary, max_salary
+
+
+def get_salary_format(min_salary, max_salary):
+    if min_salary == max_salary:
+        salary = str(min_salary)
+    else:
+        salary = f"{min_salary} - {max_salary}"
+
+    salary_time_period = 'N/A'
+    if 0 < min_salary < 900:
+        salary_time_period = 'Hourly'
+    elif min_salary > 0:
+        salary_time_period = "Yearly"
+
+    if salary_time_period != "N/A":
+        salary += f" {salary_time_period}"
+    return salary
