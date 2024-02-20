@@ -3,7 +3,6 @@
 import pytest
 import jobs_excel
 import jobs_db
-from openpyxl import load_workbook
 import sqlite3
 
 
