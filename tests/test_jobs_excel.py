@@ -12,7 +12,7 @@ def test_get_jobs():
     Tests to make sure data goes into table.
     """
 
-    jobs = jobs_excel.get_jobs()
+    jobs = jobs_excel.get_jobs("test_Sprint3Data.xlsx")
 
     assert len(jobs) == 750
 

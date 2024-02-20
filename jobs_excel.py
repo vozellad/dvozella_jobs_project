@@ -6,7 +6,7 @@ from openpyxl import load_workbook
 import json
 
 
-def get_jobs():
+def get_jobs(filename):
     """Gets job data from an Excel file. Order of data is ordered to match order of database columns.
 
     Keyword arguments:
@@ -16,7 +16,7 @@ def get_jobs():
     jobs -- Job data from Excel file
     """
 
-    workbook = load_workbook(filename="Sprint3Data.xlsx")
+    workbook = load_workbook(filename=filename)
     sheet = workbook.active
 
     jobs = []

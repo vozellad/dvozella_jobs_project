@@ -10,7 +10,7 @@ def main():
     jobs = jobs_results.get_jobs(5)
     jobs_results.store_jobs(jobs)
     jobs = jobs_results.prepare_jobs_for_db(jobs)
-    jobs += jobs_excel.get_jobs()
+    jobs += jobs_excel.get_jobs("Sprint3Data.xlsx")
 
     conn, cursor = jobs_db.open_db("jobs_db.sqlite")
     jobs_db.setup_db(cursor)
