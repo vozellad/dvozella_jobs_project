@@ -6,12 +6,12 @@ import jobs_db
 import sqlite3
 
 
-def test_get_jobs():
+def test_get_jobs(excel_file_path):
     """Tests if records from Excel file are retrieved correctly.
     Tests to make sure data goes into table.
     """
 
-    jobs = jobs_excel.get_jobs("../Sprint3Data.xlsx")
+    jobs = jobs_excel.get_jobs(excel_file_path)
 
     assert len(jobs) == 750
 
