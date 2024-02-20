@@ -1,5 +1,4 @@
-"""Module for data processing from Excel files used for this project.
-"""
+"""Module for data processing from Excel files used for this project."""
 
 
 from openpyxl import load_workbook

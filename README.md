@@ -13,10 +13,10 @@ Makes a database and stores it in 3 tables: 'jobs', 'related_links', and 'qualif
 'jobs' table is the main table. 'related_links' stores multiple links for each job listing, and 'qualifications' 
 stores multiple qualifications for each job listing.<br>
 
-Order of data: (job_id, title, company_name, location, description, posted_at, salary, remote, links, qualifications)
+Order of data: (job_id, title, company_name, location, description, posted_at, salary, remote, links, qualifications)<br>
+Both data sources go into the same database and set of tables.<br>
 
 Run the file, then view the text file it wrote to named 'jobs_results.txt'.<br>
 Use an application such as 'DB Browser for SQLite' to view the database.<br>
 
-Nothing is missing for Sprint 3
-
+Nothing is missing for Sprint 3.

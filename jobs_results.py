@@ -90,6 +90,17 @@ def prepare_jobs_for_db(jobs):
 
 
 def get_highlights_section(highlights, title):
+    """jobs_highlights has multiple indexed sets of items with titles. Titles are not guaranteed to stay in the same
+    order. Searches for given title and returns items under that title.
+
+    Keyword arguments:
+    highlights -- The "job_highlights" section from the Serpapi data
+    title -- The name the desired items are under
+
+    Returns:
+    Items associated with the given title. If no such title, returns empty string.
+    """
+
     for section in highlights:
         if section.get("title") == title:
             return section.get("items")
@@ -97,7 +108,16 @@ def get_highlights_section(highlights, title):
 
 
 def get_salary(benefits: dict, job_description: str):
-    """Looks for salary in multiple places."""
+    """Looks for salary in multiple places.
+
+    Keyword arguments:
+    benefits -- Data from 'Benefits' section of Serpapi data
+    job_description -- 'job_description" section of Serpapi data
+
+    Returns:
+    (min_salary, max_salary) -- Tuple of the salary range
+    """
+
     # Code provided by professor with student modifications
     min_salary = 0
     max_salary = 0
@@ -127,6 +147,15 @@ def get_salary(benefits: dict, job_description: str):
 
 
 def get_salary_format(min_salary, max_salary):
+    """Gets salary range and forms a string.
+
+    Keyword arguments:
+    min_salary -- low end of salary range
+    max_salary -- high end of salary range
+
+    Returns:
+    salary -- Worded version of salary range
+    """
     if min_salary == max_salary:
         salary = str(min_salary)
     else:

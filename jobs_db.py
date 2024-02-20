@@ -1,5 +1,4 @@
-"""Module for handling database for jobs. Includes creating, updating, and deleting jobs data.
-"""
+"""Module for handling database for jobs. Includes creating, updating, and deleting jobs data."""
 
 
 import sqlite3
