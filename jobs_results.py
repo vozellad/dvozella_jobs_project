@@ -4,6 +4,7 @@ the results to a text file.
 
 from my_secrets import api_key
 from serpapi import GoogleSearch
+import re
 
 
 def get_jobs(page_amt):
@@ -72,13 +73,54 @@ def prepare_jobs_for_db(jobs):
         if work_from_home == "" and j["location"].strip().lower() == "anywhere":
             work_from_home = True
 
+        benefits = get_highlights_section(j["job_highlights"], "Benefits")
+
+        # If salary wasn't in assigned location, it might be in another location
+        if salary == "":
+            get_salary(benefits, j["description"])
+
         # Get all links of current listing
         links = [d.get("link") for d in j["related_links"]]
 
-        # Get all qualifications of current listing
-        qualifications = j["job_highlights"][0].get("items")
+        qualifications = get_highlights_section(j["job_highlights"], "Qualifications")
 
         prepared_jobs += [(job_id, title, company_name, location, description, posted_at, salary,
-                          work_from_home, links, qualifications)]
+                           work_from_home, links, qualifications)]
 
     return prepared_jobs
+
+
+def get_highlights_section(highlights, title):
+    for section in highlights:
+        if section.get("title") == title:
+            return section
+
+
+def get_salary(benefits_section: dict, job_description: str):
+    """Code provided by professor. Looks for salary in multiple places."""
+    min_salary = 0
+    max_salary = 0
+    if benefits_section:  # if we got a dictionary with stuff in it
+        for benefit_item in benefits_section['items']:
+            if 'range' in benefit_item.lower():
+                # from https://stackoverflow.com/questions/63714217/how-can-i-extract-numbers-containing-commas-from
+                # -strings-in-python
+                numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
+                if numbers:  # if we found salary data, return it
+                    return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+            numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
+            if len(numbers) == 2 and int(
+                    # some jobs just put the numbers in one item and the description in another
+                    numbers[0].replace(',', '')) > 30:
+                return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+            else:
+                return min_salary, max_salary
+    location = job_description.find("salary range")
+    if location < 0:
+        location = job_description.find("pay range")
+    if location < 0:
+        return min_salary, max_salary
+    numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', job_description[location:location + 50])
+    if numbers:
+        return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+    return min_salary, max_salary
