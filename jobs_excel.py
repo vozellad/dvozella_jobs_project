@@ -3,14 +3,13 @@
 
 
 from openpyxl import load_workbook
-import json
 
 
 def get_jobs(filename):
     """Gets job data from an Excel file. Order of data is ordered to match order of database columns.
 
     Keyword arguments:
-    None
+    filename -- Excel xlsx file storing job data
 
     Returns:
     jobs -- Job data from Excel file
