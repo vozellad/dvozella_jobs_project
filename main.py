@@ -4,7 +4,7 @@ import jobs_db
 import jobs_results
 import jobs_excel
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton
+from PySide6.QtWidgets import QApplication
 
 
 def get_job_data():
