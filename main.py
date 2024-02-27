@@ -6,7 +6,7 @@ import jobs_excel
 import sys
 from PySide6.QtWidgets import QApplication
 import mainwindow
-from ui_form import Ui_MainWindow
+from ui_mainwindow import Ui_MainWindow
 
 
 def get_job_data():
