@@ -5,8 +5,7 @@ import jobs_results
 import jobs_excel
 import sys
 from PySide6.QtWidgets import QApplication
-import mainwindow
-from ui_mainwindow import Ui_MainWindow
+from mainwindow import MainWindow
 
 
 def get_job_data():
@@ -29,8 +28,9 @@ def main():
 
     # Start GUI
     app = QApplication(sys.argv)
-    window = mainwindow.MainWindow()
+    window = MainWindow()
     app.aboutToQuit.connect(lambda: jobs_db.close_db(conn))
+    window.show()
     sys.exit(app.exec())
 
 

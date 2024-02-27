@@ -1,13 +1,10 @@
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton
+from ui_mainwindow import Ui_MainWindow
 
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setup()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
 
-    def setup(self):
-        self.setGeometry(100, 100, 200, 150)
-        self.setWindowTitle('Window Example')
-
-        self.show()
