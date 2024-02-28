@@ -136,4 +136,5 @@ def insert_jobs(cursor, jobs):
 
 
 def get_jobs(cursor):
-    return cursor.execute(f"SELECT * from jobs")
+    cursor.execute("SELECT * FROM jobs")
+    return cursor.fetchall()
