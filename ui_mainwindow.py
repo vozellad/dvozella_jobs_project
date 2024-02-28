@@ -69,7 +69,7 @@ class Ui_MainWindow(object):
 
         self.jobs_listView = QListView(MainWindow)
         self.jobs_listView.setObjectName(u"jobs_listView")
-        self.jobs_listView.setSpacing(10)
+        self.jobs_listView.setSpacing(5)
 
         self.jobslist_verticalLayout.addWidget(self.jobs_listView)
 
