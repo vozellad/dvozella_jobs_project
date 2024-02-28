@@ -19,18 +19,22 @@ def get_job_data():
 def main():
     # uncomment code. testing without using tokens.
 
-    # jobs = get_job_data()
+    # jobs_results = get_job_data()
 
     # Store job data
     conn, cursor = jobs_db.open_db("jobs_db.sqlite")
     jobs_db.setup_db(cursor)
-    # jobs_db.insert_jobs(cursor, jobs)
+    # jobs_db.insert_jobs(cursor, jobs_results)
+
+    # Get database records for GUI
+    jobs_records = jobs_db.get_jobs(cursor)
 
     # Start GUI
     app = QApplication(sys.argv)
-    window = MainWindow()
     app.aboutToQuit.connect(lambda: jobs_db.close_db(conn))
+    window = MainWindow(jobs_records)
     window.show()
+
     sys.exit(app.exec())
 
 

@@ -75,7 +75,7 @@ def setup_db(cursor):
     );''')
 
 
-def _insert_job(cursor, job):
+def __insert_job(cursor, job):
     """Insert given data into database.
     Data in jobs must be ordered correctly. If no data for something, give it empty value.
 
@@ -133,3 +133,7 @@ def insert_jobs(cursor, jobs):
             print(f"Error inserting job {j[0]}. It's already there.")
         except sqlite3.OperationalError as e:
             print(f"Error inserting job {e}.")
+
+
+def get_jobs(cursor):
+    return cursor.execute(f"SELECT * from jobs")
