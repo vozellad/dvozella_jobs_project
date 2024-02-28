@@ -58,13 +58,13 @@ def prepare_jobs_for_db(jobs):
 
     for j in jobs:
         # Get SQL data parameters for new table row
-        job_id = j["job_id"]
-        title = j["title"]
-        company_name = j["company_name"]
-        location = j.get("location", "")
-        description = j.get("description", "")
-        posted_at = j["detected_extensions"].get("posted_at", "")
-        salary = j["detected_extensions"].get("salary", "")
+        job_id = j["job_id"].strip()
+        title = j["title"].strip()
+        company_name = j["company_name"].strip()
+        location = j.get("location", "").strip()
+        description = j.get("description", "").strip()
+        posted_at = j["detected_extensions"].get("posted_at", "").strip()
+        salary = j["detected_extensions"].get("salary", "").strip()
         work_from_home = j["detected_extensions"].get("work_from_home", "")
 
         # If work_from_home empty but location has "anywhere", the job is considered remote1
@@ -72,6 +72,7 @@ def prepare_jobs_for_db(jobs):
             work_from_home = True
 
         benefits = get_highlights_section(j["job_highlights"], "Benefits")
+        strip_str_in_list(benefits)
 
         # If salary wasn't in assigned location, it might be in another location
         if salary == "":
@@ -80,8 +81,10 @@ def prepare_jobs_for_db(jobs):
 
         # Get all links of current listing
         links = [d.get("link") for d in j["related_links"]]
+        strip_str_in_list(links)
 
         qualifications = get_highlights_section(j["job_highlights"], "Qualifications")
+        strip_str_in_list(qualifications)
 
         prepared_jobs += [(job_id, title, company_name, location, description, posted_at, salary,
                            work_from_home, links, qualifications)]
@@ -170,3 +173,8 @@ def get_salary_format(min_salary, max_salary):
     if salary_time_period != "N/A":
         salary += f" {salary_time_period}"
     return salary
+
+
+def strip_str_in_list(l):
+    for i, s in enumerate(l):
+        l[i] = s.strip()
