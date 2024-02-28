@@ -128,7 +128,7 @@ def insert_jobs(cursor, jobs):
 
     for j in jobs:
         try:
-            _insert_job(cursor, j)
+            __insert_job(cursor, j)
         except sqlite3.IntegrityError:
             print(f"Error inserting job {j[0]}. It's already there.")
         except sqlite3.OperationalError as e:
