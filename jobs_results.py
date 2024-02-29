@@ -92,6 +92,11 @@ def prepare_jobs_for_db(jobs):
     return prepared_jobs
 
 
+def strip_str_in_list(l):
+    for i, s in enumerate(l):
+        l[i] = s.strip()
+
+
 def get_highlights_section(highlights, title):
     """jobs_highlights has multiple indexed sets of items with titles. Titles are not guaranteed to stay in the same
     order. Searches for given title and returns items under that title.
@@ -173,8 +178,3 @@ def get_salary_format(min_salary, max_salary):
     if salary_time_period != "N/A":
         salary += f" {salary_time_period}"
     return salary
-
-
-def strip_str_in_list(l):
-    for i, s in enumerate(l):
-        l[i] = s.strip()

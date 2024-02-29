@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
-    QLabel, QListView, QPlainTextEdit, QPushButton,
-    QSizePolicy, QVBoxLayout, QWidget)
+    QLabel, QListWidget, QListWidgetItem, QPlainTextEdit,
+    QPushButton, QSizePolicy, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -67,11 +67,11 @@ class Ui_MainWindow(object):
 
         self.jobslist_verticalLayout.addLayout(self.filter_horizontalLayout)
 
-        self.jobs_listView = QListView(MainWindow)
-        self.jobs_listView.setObjectName(u"jobs_listView")
-        self.jobs_listView.setSpacing(5)
+        self.jobs_listWidget = QListWidget(MainWindow)
+        self.jobs_listWidget.setObjectName(u"jobs_listWidget")
+        self.jobs_listWidget.setSpacing(5)
 
-        self.jobslist_verticalLayout.addWidget(self.jobs_listView)
+        self.jobslist_verticalLayout.addWidget(self.jobs_listWidget)
 
         self.jobsButtons_horizontalLayout = QHBoxLayout()
         self.jobsButtons_horizontalLayout.setObjectName(u"jobsButtons_horizontalLayout")
