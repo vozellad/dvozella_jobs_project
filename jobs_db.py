@@ -99,7 +99,7 @@ def __insert_job(cursor, job):
     cursor.execute(sql_command, job[:8])
 
     # Insert every link individually into related_links table
-    links = job[8]
+    links = set(job[8])
     for link in links:
         cursor.execute('''INSERT OR IGNORE INTO related_links (job_id, url)
                                   VALUES (?, ?);''', (job[0], link))
@@ -136,5 +136,24 @@ def insert_jobs(cursor, jobs):
 
 
 def get_jobs(cursor):
-    cursor.execute("SELECT * FROM jobs")
-    return cursor.fetchall()
+    cursor.execute("""
+        SELECT jobs.*, 
+        GROUP_CONCAT(related_links.url, '\n') AS related_links, 
+        GROUP_CONCAT(qualifications.qualification, '\nasdfqwerzxcv') AS qualifications
+        
+        FROM jobs
+        LEFT JOIN related_links ON jobs.job_id = related_links.job_id
+        LEFT JOIN qualifications ON jobs.job_id = qualifications.job_id
+        GROUP BY jobs.job_id
+    """)
+
+    jobs = cursor.fetchall()
+    jobs = [list(j) for j in jobs]
+
+    for i, j in enumerate(jobs):
+        if j[-2]:  # links
+            jobs[i][-2] = j[-2].split('\n')
+        if j[-1]:  # qualifications
+            jobs[i][-1] = j[-1].split('\nasdfqwerzxcv')
+
+    return jobs
