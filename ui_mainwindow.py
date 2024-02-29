@@ -15,15 +15,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
-    QLabel, QListWidget, QListWidgetItem, QPlainTextEdit,
-    QPushButton, QSizePolicy, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QGridLayout, QHBoxLayout, QLabel, QListWidget,
+    QListWidgetItem, QPlainTextEdit, QPushButton, QSizePolicy,
+    QSpinBox, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(847, 719)
+        MainWindow.resize(974, 678)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -40,32 +41,61 @@ class Ui_MainWindow(object):
 
         self.jobslist_verticalLayout.addWidget(self.jobs_label)
 
-        self.filter_horizontalLayout = QHBoxLayout()
-        self.filter_horizontalLayout.setObjectName(u"filter_horizontalLayout")
-        self.filter_plainTextEdit = QPlainTextEdit(MainWindow)
-        self.filter_plainTextEdit.setObjectName(u"filter_plainTextEdit")
+        self.filter_gridLayout = QGridLayout()
+        self.filter_gridLayout.setObjectName(u"filter_gridLayout")
+        self.keyword_label = QLabel(MainWindow)
+        self.keyword_label.setObjectName(u"keyword_label")
+
+        self.filter_gridLayout.addWidget(self.keyword_label, 1, 0, 1, 1)
+
+        self.remoteFilter_checkBox = QCheckBox(MainWindow)
+        self.remoteFilter_checkBox.setObjectName(u"remoteFilter_checkBox")
+
+        self.filter_gridLayout.addWidget(self.remoteFilter_checkBox, 3, 1, 1, 2)
+
+        self.remoteFilter_label = QLabel(MainWindow)
+        self.remoteFilter_label.setObjectName(u"remoteFilter_label")
+
+        self.filter_gridLayout.addWidget(self.remoteFilter_label, 3, 0, 1, 1)
+
+        self.locationFilter_label = QLabel(MainWindow)
+        self.locationFilter_label.setObjectName(u"locationFilter_label")
+
+        self.filter_gridLayout.addWidget(self.locationFilter_label, 2, 0, 1, 1)
+
+        self.locationFilter_comboBox = QComboBox(MainWindow)
+        self.locationFilter_comboBox.setObjectName(u"locationFilter_comboBox")
+
+        self.filter_gridLayout.addWidget(self.locationFilter_comboBox, 2, 1, 1, 2)
+
+        self.keywordFilter_plainTextEdit = QPlainTextEdit(MainWindow)
+        self.keywordFilter_plainTextEdit.setObjectName(u"keywordFilter_plainTextEdit")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.filter_plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.filter_plainTextEdit.setSizePolicy(sizePolicy1)
-        self.filter_plainTextEdit.setMaximumSize(QSize(16777215, 30))
+        sizePolicy1.setHeightForWidth(self.keywordFilter_plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.keywordFilter_plainTextEdit.setSizePolicy(sizePolicy1)
+        self.keywordFilter_plainTextEdit.setMaximumSize(QSize(16777215, 30))
 
-        self.filter_horizontalLayout.addWidget(self.filter_plainTextEdit)
+        self.filter_gridLayout.addWidget(self.keywordFilter_plainTextEdit, 1, 1, 1, 1)
 
-        self.filter_pushButton = QPushButton(MainWindow)
-        self.filter_pushButton.setObjectName(u"filter_pushButton")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.filter_pushButton.sizePolicy().hasHeightForWidth())
-        self.filter_pushButton.setSizePolicy(sizePolicy2)
-        self.filter_pushButton.setMaximumSize(QSize(60, 16777215))
+        self.salaryFilter_label = QLabel(MainWindow)
+        self.salaryFilter_label.setObjectName(u"salaryFilter_label")
 
-        self.filter_horizontalLayout.addWidget(self.filter_pushButton)
+        self.filter_gridLayout.addWidget(self.salaryFilter_label, 4, 0, 1, 1)
+
+        self.salaryFilter_spinBox = QSpinBox(MainWindow)
+        self.salaryFilter_spinBox.setObjectName(u"salaryFilter_spinBox")
+
+        self.filter_gridLayout.addWidget(self.salaryFilter_spinBox, 4, 1, 1, 2)
+
+        self.filter_label = QLabel(MainWindow)
+        self.filter_label.setObjectName(u"filter_label")
+
+        self.filter_gridLayout.addWidget(self.filter_label, 0, 0, 1, 1)
 
 
-        self.jobslist_verticalLayout.addLayout(self.filter_horizontalLayout)
+        self.jobslist_verticalLayout.addLayout(self.filter_gridLayout)
 
         self.jobs_listWidget = QListWidget(MainWindow)
         self.jobs_listWidget.setObjectName(u"jobs_listWidget")
@@ -125,11 +155,11 @@ class Ui_MainWindow(object):
         self.title_plainTextEdit = QPlainTextEdit(MainWindow)
         self.title_plainTextEdit.setObjectName(u"title_plainTextEdit")
         self.title_plainTextEdit.setEnabled(True)
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.title_plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.title_plainTextEdit.setSizePolicy(sizePolicy3)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.title_plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.title_plainTextEdit.setSizePolicy(sizePolicy2)
         self.title_plainTextEdit.setMinimumSize(QSize(0, 30))
         self.title_plainTextEdit.setMaximumSize(QSize(16777215, 45))
         self.title_plainTextEdit.setReadOnly(True)
@@ -145,8 +175,8 @@ class Ui_MainWindow(object):
         self.company_plainTextEdit = QPlainTextEdit(MainWindow)
         self.company_plainTextEdit.setObjectName(u"company_plainTextEdit")
         self.company_plainTextEdit.setEnabled(True)
-        sizePolicy3.setHeightForWidth(self.company_plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.company_plainTextEdit.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.company_plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.company_plainTextEdit.setSizePolicy(sizePolicy2)
         self.company_plainTextEdit.setMinimumSize(QSize(0, 30))
         self.company_plainTextEdit.setMaximumSize(QSize(16777215, 45))
         self.company_plainTextEdit.setReadOnly(True)
@@ -217,11 +247,11 @@ class Ui_MainWindow(object):
         self.links_plainTextEdit = QPlainTextEdit(MainWindow)
         self.links_plainTextEdit.setObjectName(u"links_plainTextEdit")
         self.links_plainTextEdit.setEnabled(True)
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.links_plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.links_plainTextEdit.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.links_plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.links_plainTextEdit.setSizePolicy(sizePolicy3)
         self.links_plainTextEdit.setMinimumSize(QSize(0, 30))
         self.links_plainTextEdit.setMaximumSize(QSize(16777215, 60))
 
@@ -235,8 +265,8 @@ class Ui_MainWindow(object):
         self.qualifications_plainTextEdit = QPlainTextEdit(MainWindow)
         self.qualifications_plainTextEdit.setObjectName(u"qualifications_plainTextEdit")
         self.qualifications_plainTextEdit.setEnabled(True)
-        sizePolicy4.setHeightForWidth(self.qualifications_plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.qualifications_plainTextEdit.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.qualifications_plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.qualifications_plainTextEdit.setSizePolicy(sizePolicy3)
         self.qualifications_plainTextEdit.setMinimumSize(QSize(0, 30))
         self.qualifications_plainTextEdit.setMaximumSize(QSize(16777215, 60))
         self.qualifications_plainTextEdit.setReadOnly(True)
@@ -251,8 +281,8 @@ class Ui_MainWindow(object):
         self.description_plainTextEdit = QPlainTextEdit(MainWindow)
         self.description_plainTextEdit.setObjectName(u"description_plainTextEdit")
         self.description_plainTextEdit.setEnabled(True)
-        sizePolicy4.setHeightForWidth(self.description_plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.description_plainTextEdit.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.description_plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.description_plainTextEdit.setSizePolicy(sizePolicy3)
         self.description_plainTextEdit.setMinimumSize(QSize(0, 30))
         self.description_plainTextEdit.setMaximumSize(QSize(16777215, 120))
         self.description_plainTextEdit.setReadOnly(True)
@@ -271,8 +301,13 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.jobs_label.setText(QCoreApplication.translate("MainWindow", u"LIST OF JOBS", None))
-        self.filter_plainTextEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Filter jobs", None))
-        self.filter_pushButton.setText(QCoreApplication.translate("MainWindow", u"Filter", None))
+        self.keyword_label.setText(QCoreApplication.translate("MainWindow", u"Keyword: ", None))
+        self.remoteFilter_checkBox.setText("")
+        self.remoteFilter_label.setText(QCoreApplication.translate("MainWindow", u"Remote: ", None))
+        self.locationFilter_label.setText(QCoreApplication.translate("MainWindow", u"Location: ", None))
+        self.keywordFilter_plainTextEdit.setPlaceholderText("")
+        self.salaryFilter_label.setText(QCoreApplication.translate("MainWindow", u"Min Salary: ", None))
+        self.filter_label.setText(QCoreApplication.translate("MainWindow", u"Filtering options", None))
         self.deselect_pushButton.setText(QCoreApplication.translate("MainWindow", u"Deselect", None))
         self.map_pushButton.setText(QCoreApplication.translate("MainWindow", u"Map", None))
         self.jobdata_label.setText(QCoreApplication.translate("MainWindow", u"SELECTED JOB DATA", None))
