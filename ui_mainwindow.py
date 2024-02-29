@@ -69,6 +69,10 @@ class Ui_MainWindow(object):
 
         self.jobs_listWidget = QListWidget(MainWindow)
         self.jobs_listWidget.setObjectName(u"jobs_listWidget")
+        self.jobs_listWidget.setStyleSheet(u"QListWidget::item:hover {\n"
+"    background-color: lightgray;\n"
+"}\n"
+"")
         self.jobs_listWidget.setSpacing(5)
 
         self.jobslist_verticalLayout.addWidget(self.jobs_listWidget)

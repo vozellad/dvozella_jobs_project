@@ -1,4 +1,4 @@
-from PySide6.QtGui import QStandardItemModel, QStandardItem, Qt
+from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QWidget
 
 from ui_mainwindow import Ui_MainWindow
@@ -46,6 +46,8 @@ class MainWindow(QWidget):
         self.ui.postedAt_plainTextEdit.setPlaceholderText("Not available")
         self.ui.salary_plainTextEdit.setPlaceholderText("Not available")
         self.ui.remote_plainTextEdit.setPlaceholderText("No")
+        self.ui.links_plainTextEdit.setPlaceholderText("Not available")
+        self.ui.qualifications_plainTextEdit.setPlaceholderText("Not available")
 
     def __clear_placeholders(self):
         self.ui.title_plainTextEdit.setPlaceholderText("")
@@ -55,6 +57,8 @@ class MainWindow(QWidget):
         self.ui.postedAt_plainTextEdit.setPlaceholderText("")
         self.ui.salary_plainTextEdit.setPlaceholderText("")
         self.ui.remote_plainTextEdit.setPlaceholderText("")
+        self.ui.links_plainTextEdit.setPlaceholderText("")
+        self.ui.qualifications_plainTextEdit.setPlaceholderText("")
 
     def __set_job_fields(self, job):
         self.ui.title_plainTextEdit.setPlainText(job[1] if job[1] else "")
@@ -73,3 +77,5 @@ class MainWindow(QWidget):
         self.ui.postedAt_plainTextEdit.setPlainText("")
         self.ui.salary_plainTextEdit.setPlainText("")
         self.ui.remote_plainTextEdit.setPlainText("")
+        self.ui.links_plainTextEdit.setPlainText("")
+        self.ui.qualifications_plainTextEdit.setPlainText("")
