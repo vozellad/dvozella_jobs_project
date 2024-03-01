@@ -33,6 +33,7 @@ class MainWindow(QWidget):
         for j in self.curr_jobs:
             job_str = f"{j[1]}\n{j[2]}"  # Get title and company as text
             self.ui.jobs_listWidget.addItem(job_str)
+        self.ui.resultsAmt_label.setText(str(len(self.curr_jobs)))
 
     def __job_selected(self, current, previous):
         if previous.row() == -1:  # Boxes will be empty on window startup
