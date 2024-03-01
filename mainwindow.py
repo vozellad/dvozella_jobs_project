@@ -37,6 +37,8 @@ class MainWindow(QWidget):
     def __job_selected(self, current, previous):
         if previous.row() == -1:  # Boxes will be empty on window startup
             self.__set_placeholders()
+        if current.row() == -1:
+            return
         self.__set_job_fields(self.curr_jobs[current.row()])
 
         self.ui.jobs_listWidget.setFocus(Qt.FocusReason.MouseFocusReason)
@@ -96,9 +98,9 @@ class MainWindow(QWidget):
     def __filter_jobs(self):
         self.curr_jobs = self.jobs
 
-        #self.__filter_remote()
-        #self.__filter_min_salary()
-        #self.__filter_keyword()
+        self.__filter_remote()
+        self.__filter_min_salary()
+        self.__filter_keyword()
         self.__filter_city_location()
 
         self.__list_jobs()
@@ -124,7 +126,7 @@ class MainWindow(QWidget):
         for j in self.curr_jobs:
             if j[3]:
                 cities.add(self.__get_city_str(j[3]))
-        return cities
+        return sorted(cities)
 
     def __filter_city_location(self):
         user_city = self.ui.locationFilter_comboBox.currentText()
