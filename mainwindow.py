@@ -154,7 +154,6 @@ class MainWindow(QWidget):
         user_min_salary = int(self.ui.salaryFilter_spinBox.value())
         min_salary_jobs = []
 
-        # TODO: nesting
         for j in self.curr_jobs:
             if not j[6]:
                 curr_min_salary = 0
