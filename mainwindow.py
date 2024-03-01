@@ -1,8 +1,9 @@
 from PySide6.QtGui import Qt
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QApplication
 import re
 
 from ui_mainwindow import Ui_MainWindow
+from mapwindow import MapWindow
 
 
 class MainWindow(QWidget):
@@ -27,6 +28,9 @@ class MainWindow(QWidget):
         self.ui.salaryFilter_spinBox.valueChanged.connect(self.__filter_jobs)
 
         self.__insert_city_locations()
+
+        self.m = None
+        self.ui.map_pushButton.clicked.connect(self.__display_map)
 
     def __list_jobs(self):
         self.ui.jobs_listWidget.clear()
@@ -174,3 +178,8 @@ class MainWindow(QWidget):
                 min_salary_jobs.append(j)
 
         self.curr_jobs = min_salary_jobs
+
+    def __display_map(self):
+        self.m = MapWindow()
+        self.m.show()
+
