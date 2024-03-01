@@ -99,14 +99,15 @@ def __insert_job(cursor, job):
     cursor.execute(sql_command, job[:8])
 
     # Insert every link individually into related_links table
-    links = set(job[8])
-    for link in links:
-        cursor.execute('''INSERT OR IGNORE INTO related_links (job_id, url)
-                                  VALUES (?, ?);''', (job[0], link))
+    seen = set()  # Can't add all links to set because order not assured makes it hard to test
+    for link in job[8]:
+        if link not in seen:
+            cursor.execute('''INSERT OR IGNORE INTO related_links (job_id, url)
+                                      VALUES (?, ?);''', (job[0], link))
+            seen.add(link)
 
     # Insert every qualification individually into qualifications table
-    qualifications = job[9]
-    for q in qualifications:
+    for q in job[9]:
         cursor.execute('''INSERT OR IGNORE INTO qualifications (job_id, qualification)
                                   VALUES (?, ?)''', (job[0], q))
 

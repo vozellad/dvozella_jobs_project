@@ -47,7 +47,6 @@ def test_jobs_db():
     assert fetch is not None
     assert fetch[0] is not None
     assert fetch[1] is not None
-    print(fetch)
     assert fetch[0][2] == "React"
     assert fetch[1][2] == "Python"
 
