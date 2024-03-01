@@ -26,6 +26,8 @@ class MainWindow(QWidget):
         self.ui.locationFilter_comboBox.currentIndexChanged.connect(self.__filter_jobs)
         self.ui.salaryFilter_spinBox.valueChanged.connect(self.__filter_jobs)
 
+        self.__insert_city_locations()
+
     def __list_jobs(self):
         self.ui.jobs_listWidget.clear()
         for j in self.curr_jobs:
@@ -94,24 +96,58 @@ class MainWindow(QWidget):
     def __filter_jobs(self):
         self.curr_jobs = self.jobs
 
-        self.__filter_remote()
-        self.__filter_location()
-        self.__filter_salary()
-        self.__filter_keyword()
+        #self.__filter_remote()
+        #self.__filter_min_salary()
+        #self.__filter_keyword()
+        self.__filter_city_location()
 
         self.__list_jobs()
+        self.__deselect_job()
 
     def __filter_keyword(self):
-        pass
+        keyword = self.ui.keywordFilter_plainTextEdit.toPlainText()
+        keyword_jobs = []
 
-    def __filter_location(self):
-        pass
+        for j in self.curr_jobs:
+            if keyword.lower() in str(j).lower():
+                keyword_jobs.append(j)
+
+        self.curr_jobs = keyword_jobs
+
+    def __insert_city_locations(self):
+        cities = self.__get_city_locations()
+        self.ui.locationFilter_comboBox.addItem("")
+        self.ui.locationFilter_comboBox.addItems(cities)
+
+    def __get_city_locations(self):
+        cities = set()
+        for j in self.curr_jobs:
+            if j[3]:
+                cities.add(self.__get_city_str(j[3]))
+        return cities
+
+    def __filter_city_location(self):
+        user_city = self.ui.locationFilter_comboBox.currentText()
+        if not user_city:
+            return
+        city_jobs = []
+        for j in self.curr_jobs:
+            if j[3] and user_city == self.__get_city_str(j[3]):
+                city_jobs.append(j)
+        self.curr_jobs = city_jobs
+
+    def __get_city_str(self, city):
+        if "(" in city:  # remove "(+# others)" occurrences
+            city = re.findall(".+\(", city)[0][:-1].rstrip()
+        if re.search("[0-9-]+$", city):  # remove zipcode
+            city = " ".join(city.split(" ")[:-1])
+        return city
 
     def __filter_remote(self):
         if self.ui.remoteFilter_checkBox.isChecked():
             self.curr_jobs = [j for j in self.curr_jobs if j[7]]
 
-    def __filter_salary(self):
+    def __filter_min_salary(self):
         user_min_salary = int(self.ui.salaryFilter_spinBox.value())
         min_salary_jobs = []
 
@@ -136,6 +172,3 @@ class MainWindow(QWidget):
                 min_salary_jobs.append(j)
 
         self.curr_jobs = min_salary_jobs
-
-    def __get_locations(self, jobs):
-        pass
