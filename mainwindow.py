@@ -202,7 +202,7 @@ class MainWindow(QWidget):
 
         # Find jobs not there anymore
         jobs_to_remove = self.get_set_difference(self.prev_filtered_jobs, self.filtered_jobs)
-        jobs_to_remove = self.format_jobs_for_map(jobs_to_remove)
+        jobs_to_remove = [j[0] for j in jobs_to_remove]  # Get all job_ids
         self.jobs_map.remove_locations(jobs_to_remove)
 
     def get_set_difference(self, list1, list2):
