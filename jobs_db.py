@@ -137,10 +137,13 @@ def insert_jobs(cursor, jobs):
 
 
 def get_jobs(cursor):
-    cursor.execute("""
+    # Makes it much less likely it will be found in the given text
+    delimiter = "\nasdfqwerzxcv"
+
+    cursor.execute(f"""
         SELECT jobs.*, 
         GROUP_CONCAT(related_links.url, '\n') AS related_links, 
-        GROUP_CONCAT(qualifications.qualification, '\nasdfqwerzxcv') AS qualifications
+        GROUP_CONCAT(qualifications.qualification, '{delimiter}') AS qualifications
         
         FROM jobs
         LEFT JOIN related_links ON jobs.job_id = related_links.job_id
@@ -155,6 +158,6 @@ def get_jobs(cursor):
         if j[-2]:  # links
             jobs[i][-2] = j[-2].split('\n')
         if j[-1]:  # qualifications
-            jobs[i][-1] = j[-1].split('\nasdfqwerzxcv')
+            jobs[i][-1] = j[-1].split(delimiter)
 
     return jobs
