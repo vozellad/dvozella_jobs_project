@@ -222,66 +222,30 @@ class Ui_MainWindow(object):
 
         self.filter_gridLayout = QGridLayout()
         self.filter_gridLayout.setObjectName(u"filter_gridLayout")
-        self.locationFilter_comboBox = QComboBox(MainWindow)
-        self.locationFilter_comboBox.setObjectName(u"locationFilter_comboBox")
-
-        self.filter_gridLayout.addWidget(self.locationFilter_comboBox, 2, 1, 1, 1)
-
-        self.remoteFilter_checkBox = QCheckBox(MainWindow)
-        self.remoteFilter_checkBox.setObjectName(u"remoteFilter_checkBox")
-
-        self.filter_gridLayout.addWidget(self.remoteFilter_checkBox, 3, 1, 1, 1)
-
-        self.keywordFilter_plainTextEdit = QPlainTextEdit(MainWindow)
-        self.keywordFilter_plainTextEdit.setObjectName(u"keywordFilter_plainTextEdit")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.keywordFilter_plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.keywordFilter_plainTextEdit.setSizePolicy(sizePolicy3)
-        self.keywordFilter_plainTextEdit.setMaximumSize(QSize(16777215, 30))
-
-        self.filter_gridLayout.addWidget(self.keywordFilter_plainTextEdit, 1, 1, 1, 1)
-
         self.remoteFilter_label = QLabel(MainWindow)
         self.remoteFilter_label.setObjectName(u"remoteFilter_label")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.remoteFilter_label.sizePolicy().hasHeightForWidth())
-        self.remoteFilter_label.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.remoteFilter_label.sizePolicy().hasHeightForWidth())
+        self.remoteFilter_label.setSizePolicy(sizePolicy3)
 
         self.filter_gridLayout.addWidget(self.remoteFilter_label, 3, 0, 1, 1)
 
-        self.keyword_label = QLabel(MainWindow)
-        self.keyword_label.setObjectName(u"keyword_label")
-        sizePolicy4.setHeightForWidth(self.keyword_label.sizePolicy().hasHeightForWidth())
-        self.keyword_label.setSizePolicy(sizePolicy4)
-
-        self.filter_gridLayout.addWidget(self.keyword_label, 1, 0, 1, 1)
-
-        self.salaryFilter_spinBox = QSpinBox(MainWindow)
-        self.salaryFilter_spinBox.setObjectName(u"salaryFilter_spinBox")
-        self.salaryFilter_spinBox.setMaximum(999999999)
-
-        self.filter_gridLayout.addWidget(self.salaryFilter_spinBox, 4, 1, 1, 1)
-
         self.locationFilter_label = QLabel(MainWindow)
         self.locationFilter_label.setObjectName(u"locationFilter_label")
-        sizePolicy4.setHeightForWidth(self.locationFilter_label.sizePolicy().hasHeightForWidth())
-        self.locationFilter_label.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.locationFilter_label.sizePolicy().hasHeightForWidth())
+        self.locationFilter_label.setSizePolicy(sizePolicy3)
 
         self.filter_gridLayout.addWidget(self.locationFilter_label, 2, 0, 1, 1)
 
-        self.salaryFilter_label = QLabel(MainWindow)
-        self.salaryFilter_label.setObjectName(u"salaryFilter_label")
-        sizePolicy4.setHeightForWidth(self.salaryFilter_label.sizePolicy().hasHeightForWidth())
-        self.salaryFilter_label.setSizePolicy(sizePolicy4)
-
-        self.filter_gridLayout.addWidget(self.salaryFilter_label, 4, 0, 1, 1)
-
         self.resultsAmount_label = QLabel(MainWindow)
         self.resultsAmount_label.setObjectName(u"resultsAmount_label")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.resultsAmount_label.sizePolicy().hasHeightForWidth())
+        self.resultsAmount_label.setSizePolicy(sizePolicy4)
 
         self.filter_gridLayout.addWidget(self.resultsAmount_label, 5, 0, 1, 1)
 
@@ -289,6 +253,57 @@ class Ui_MainWindow(object):
         self.resultsAmt_label.setObjectName(u"resultsAmt_label")
 
         self.filter_gridLayout.addWidget(self.resultsAmt_label, 5, 1, 1, 1)
+
+        self.salaryFilter_label = QLabel(MainWindow)
+        self.salaryFilter_label.setObjectName(u"salaryFilter_label")
+        sizePolicy3.setHeightForWidth(self.salaryFilter_label.sizePolicy().hasHeightForWidth())
+        self.salaryFilter_label.setSizePolicy(sizePolicy3)
+
+        self.filter_gridLayout.addWidget(self.salaryFilter_label, 4, 0, 1, 1)
+
+        self.keyword_label = QLabel(MainWindow)
+        self.keyword_label.setObjectName(u"keyword_label")
+        sizePolicy3.setHeightForWidth(self.keyword_label.sizePolicy().hasHeightForWidth())
+        self.keyword_label.setSizePolicy(sizePolicy3)
+
+        self.filter_gridLayout.addWidget(self.keyword_label, 1, 0, 1, 1)
+
+        self.applyFilters_pushButton = QPushButton(MainWindow)
+        self.applyFilters_pushButton.setObjectName(u"applyFilters_pushButton")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.applyFilters_pushButton.sizePolicy().hasHeightForWidth())
+        self.applyFilters_pushButton.setSizePolicy(sizePolicy5)
+
+        self.filter_gridLayout.addWidget(self.applyFilters_pushButton, 5, 2, 1, 1)
+
+        self.salaryFilter_spinBox = QSpinBox(MainWindow)
+        self.salaryFilter_spinBox.setObjectName(u"salaryFilter_spinBox")
+        self.salaryFilter_spinBox.setMaximum(999999999)
+
+        self.filter_gridLayout.addWidget(self.salaryFilter_spinBox, 4, 1, 1, 2)
+
+        self.remoteFilter_checkBox = QCheckBox(MainWindow)
+        self.remoteFilter_checkBox.setObjectName(u"remoteFilter_checkBox")
+
+        self.filter_gridLayout.addWidget(self.remoteFilter_checkBox, 3, 1, 1, 1)
+
+        self.locationFilter_comboBox = QComboBox(MainWindow)
+        self.locationFilter_comboBox.setObjectName(u"locationFilter_comboBox")
+
+        self.filter_gridLayout.addWidget(self.locationFilter_comboBox, 2, 1, 1, 2)
+
+        self.keywordFilter_plainTextEdit = QPlainTextEdit(MainWindow)
+        self.keywordFilter_plainTextEdit.setObjectName(u"keywordFilter_plainTextEdit")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.keywordFilter_plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.keywordFilter_plainTextEdit.setSizePolicy(sizePolicy6)
+        self.keywordFilter_plainTextEdit.setMaximumSize(QSize(16777215, 30))
+
+        self.filter_gridLayout.addWidget(self.keywordFilter_plainTextEdit, 1, 1, 1, 2)
 
 
         self.jobslist_verticalLayout.addLayout(self.filter_gridLayout)
@@ -343,14 +358,15 @@ class Ui_MainWindow(object):
         self.description_plainTextEdit.setPlainText("")
         self.jobs_label.setText(QCoreApplication.translate("MainWindow", u"LIST OF JOBS", None))
         self.filter_label.setText(QCoreApplication.translate("MainWindow", u"Filtering options", None))
-        self.remoteFilter_checkBox.setText("")
-        self.keywordFilter_plainTextEdit.setPlaceholderText("")
         self.remoteFilter_label.setText(QCoreApplication.translate("MainWindow", u"Remote: ", None))
-        self.keyword_label.setText(QCoreApplication.translate("MainWindow", u"Keyword: ", None))
         self.locationFilter_label.setText(QCoreApplication.translate("MainWindow", u"Location: ", None))
-        self.salaryFilter_label.setText(QCoreApplication.translate("MainWindow", u"Min Salary (yearly): ", None))
         self.resultsAmount_label.setText(QCoreApplication.translate("MainWindow", u"Results amount:  ", None))
         self.resultsAmt_label.setText("")
+        self.salaryFilter_label.setText(QCoreApplication.translate("MainWindow", u"Min Salary (yearly): ", None))
+        self.keyword_label.setText(QCoreApplication.translate("MainWindow", u"Keyword: ", None))
+        self.applyFilters_pushButton.setText(QCoreApplication.translate("MainWindow", u"Apply Filters", None))
+        self.remoteFilter_checkBox.setText("")
+        self.keywordFilter_plainTextEdit.setPlaceholderText("")
         self.deselect_pushButton.setText(QCoreApplication.translate("MainWindow", u"Deselect", None))
         self.map_pushButton.setText(QCoreApplication.translate("MainWindow", u"Map", None))
     # retranslateUi
