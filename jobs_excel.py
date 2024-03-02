@@ -35,6 +35,7 @@ def get_jobs(filename):
         if row[8] != "N/A":
             salary += f" {row[8]}"
 
-        jobs += [(row[2], row[9], row[0], row[4], "", row[1], salary, "", [], [])]
+        jobs += [(row[2].strip(), row[9].strip(), row[0].strip(), row[4].strip(),
+                  "", row[1].strip(), salary, "", [], [])]
 
     return jobs
