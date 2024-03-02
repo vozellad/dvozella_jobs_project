@@ -13,38 +13,40 @@ class MainWindow(QWidget):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.map_displayed = False
+
         # Init jobs
         self.JOBS = jobs
-        self.curr_jobs = self.JOBS  # Filtered jobs
+        self.filtered_jobs = self.JOBS  # Filtered jobs
+        self.prev_filtered_jobs = self.filtered_jobs
         self.list_jobs()
         self.ui.jobs_listWidget.selectionModel().currentChanged.connect(self.job_selected)
 
         self.ui.deselect_pushButton.clicked.connect(self.deselect_job)
 
-        # Filter events
-        self.ui.keywordFilter_plainTextEdit.textChanged.connect(self.filter_jobs)
-        self.ui.remoteFilter_checkBox.clicked.connect(self.filter_jobs)
-        self.ui.locationFilter_comboBox.currentIndexChanged.connect(self.filter_jobs)
-        self.ui.salaryFilter_spinBox.valueChanged.connect(self.filter_jobs)
+        self.jobs_map = MapWindow([])
+        self.jobs_map.windowClosed.connect(self.map_window_closed)
+        self.ui.map_pushButton.clicked.connect(self.display_map)
+
+        self.ui.applyFilters_pushButton.clicked.connect(self.filter_jobs)
 
         self.insert_city_locations()
 
-        self.jobs_map = None
-        self.ui.map_pushButton.clicked.connect(self.display_map)
+        self.ui.filter_gridLayout.setAlignment(self.ui.applyFilters_pushButton, Qt.AlignmentFlag.AlignRight)
 
     def list_jobs(self):
         self.ui.jobs_listWidget.clear()
-        for j in self.curr_jobs:
+        for j in self.filtered_jobs:
             job_str = f"{j[1]}\n{j[2]}"  # Get title and company as text
             self.ui.jobs_listWidget.addItem(job_str)
-        self.ui.resultsAmt_label.setText(str(len(self.curr_jobs)))
+        self.ui.resultsAmt_label.setText(str(len(self.filtered_jobs)))
 
     def job_selected(self, current, previous):
         if previous.row() == -1:  # Boxes will be empty on window startup
             self.set_placeholders()
         if current.row() == -1:
             return
-        self.set_job_fields(self.curr_jobs[current.row()])
+        self.set_job_fields(self.filtered_jobs[current.row()])
 
         self.ui.jobs_listWidget.setFocus(Qt.FocusReason.MouseFocusReason)
         self.ui.jobs_listWidget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -101,7 +103,8 @@ class MainWindow(QWidget):
         self.ui.qualifications_plainTextEdit.setPlainText("")
 
     def filter_jobs(self):
-        self.curr_jobs = self.JOBS
+        self.prev_filtered_jobs = self.filtered_jobs
+        self.filtered_jobs = self.JOBS
 
         self.filter_remote()
         self.filter_min_salary()
@@ -109,17 +112,19 @@ class MainWindow(QWidget):
         self.filter_city_location()
 
         self.list_jobs()
+        if self.map_displayed:
+            self.update_map()
         self.deselect_job()
 
     def filter_keyword(self):
         keyword = self.ui.keywordFilter_plainTextEdit.toPlainText()
         keyword_jobs = []
 
-        for j in self.curr_jobs:
+        for j in self.filtered_jobs:
             if keyword.lower() in str(j).lower():
                 keyword_jobs.append(j)
 
-        self.curr_jobs = keyword_jobs
+        self.filtered_jobs = keyword_jobs
 
     def insert_city_locations(self):
         cities = self.get_city_locations()
@@ -128,7 +133,7 @@ class MainWindow(QWidget):
 
     def get_city_locations(self):
         cities = set()
-        for j in self.curr_jobs:
+        for j in self.filtered_jobs:
             if j[3]:
                 cities.add(self.get_city_str(j[3]))
         return sorted(cities)
@@ -138,27 +143,31 @@ class MainWindow(QWidget):
         if not user_city:
             return
         city_jobs = []
-        for j in self.curr_jobs:
+        for j in self.filtered_jobs:
             if j[3] and user_city == self.get_city_str(j[3]):
                 city_jobs.append(j)
-        self.curr_jobs = city_jobs
+        self.filtered_jobs = city_jobs
 
     def get_city_str(self, city):
-        if "(" in city:  # remove "(+# others)" occurrences
-            city = re.findall(".+\(", city)[0][:-1].rstrip()
+        city = self.remove_parenthesis_in_location(city)
         if re.search("[0-9-]+$", city):  # remove zipcode
             city = " ".join(city.split(" ")[:-1])
         return city
 
+    def remove_parenthesis_in_location(self, city):
+        if "(" in city:  # remove "(+# others)" occurrences
+            city = re.findall(".+\(", city)[0][:-1].rstrip()
+        return city
+
     def filter_remote(self):
         if self.ui.remoteFilter_checkBox.isChecked():
-            self.curr_jobs = [j for j in self.curr_jobs if j[7]]
+            self.filtered_jobs = [j for j in self.filtered_jobs if j[7]]
 
     def filter_min_salary(self):
         user_min_salary = int(self.ui.salaryFilter_spinBox.value())
         min_salary_jobs = []
 
-        for j in self.curr_jobs:
+        for j in self.filtered_jobs:
             if not j[6]:
                 j_min_salary = 0
             else:
@@ -177,12 +186,38 @@ class MainWindow(QWidget):
             if user_min_salary <= j_min_salary:
                 min_salary_jobs.append(j)
 
-        self.curr_jobs = min_salary_jobs
+        self.filtered_jobs = min_salary_jobs
 
     def display_map(self):
-        data_to_display = []
-        for j in self.curr_jobs:
-            data_to_display.append([j[1], j[2], self.get_city_str(j[3])])
-
-        self.jobs_map = MapWindow(data_to_display)
+        self.map_displayed = True
+        jobs_to_display = self.format_jobs_for_map(self.filtered_jobs)
+        self.jobs_map.add_locations(jobs_to_display)
         self.jobs_map.show()
+
+    def update_map(self):
+        # Find new jobs
+        jobs_to_add = self.get_set_difference(self.filtered_jobs, self.prev_filtered_jobs)
+        jobs_to_add = self.format_jobs_for_map(jobs_to_add)
+        self.jobs_map.add_locations(jobs_to_add)
+
+        # Find jobs not there anymore
+        jobs_to_remove = self.get_set_difference(self.prev_filtered_jobs, self.filtered_jobs)
+        jobs_to_remove = self.format_jobs_for_map(jobs_to_remove)
+        self.jobs_map.remove_locations(jobs_to_remove)
+
+    def get_set_difference(self, list1, list2):
+        list1_tuples = [tuple(l) for l in list1]
+        list2_tuples = [tuple(l) for l in list2]
+        list_diff = set(list1_tuples) - set(list2_tuples)
+        return list(list_diff)
+
+    def format_jobs_for_map(self, jobs):
+        jobs_to_display = []
+        for j in jobs:
+            location = self.remove_parenthesis_in_location(j[3])
+            curr_data = tuple(j[:3]) + (location,)
+            jobs_to_display.append(curr_data)
+        return jobs_to_display
+
+    def map_window_closed(self):
+        self.map_displayed = False
