@@ -119,10 +119,23 @@ class MainWindow(QWidget):
         keyword_jobs = []
 
         for j in self.filtered_jobs:
-            if keyword.lower() in str(j).lower():
+            if self.keyword_in_job(keyword, j):
                 keyword_jobs.append(j)
 
         self.filtered_jobs = keyword_jobs
+
+    def keyword_in_job(self, keyword, job):
+        return (self.keyword_in_job_sublist(keyword, job[:7]) or
+                self.keyword_in_job_sublist(keyword, job[-2]) or
+                self.keyword_in_job_sublist(keyword, job[-1]))
+
+    def keyword_in_job_sublist(self, keyword, job_sublist):
+        if not job_sublist:
+            return False
+        for item in job_sublist:
+            if keyword.lower() in item.lower():
+                return True
+        return False
 
     def insert_city_locations(self):
         cities = self.get_city_locations()
