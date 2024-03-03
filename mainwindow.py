@@ -404,18 +404,54 @@ class MainWindow(QWidget):
         return new_salary
 
     def display_map(self):
+        """Creates map window to display job locations. Jobs that are displayed in list gets displayed on map.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         self.map_displayed = True
         self.add_jobs_to_map()
         self.jobs_map.show()
 
     def update_map(self):
+        """Remove jobs displayed on map and re-enter currently filtered jobs on map.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         self.add_jobs_to_map()
 
     def add_jobs_to_map(self):
+        """Marks currently filtered jobs' locations on map.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         jobs_to_display = self.format_jobs_for_map(self.filtered_jobs)
         self.jobs_map.add_locations(jobs_to_display)
 
     def format_jobs_for_map(self, jobs):
+        """Prepare job data for map.
+
+        Keyword arguments:
+        jobs -- list of jobs
+
+        Returns:
+        jobs_to_display -- formatted jobs for map: (id, title, company, formatted location)
+        """
+
         jobs_to_display = []
         for j in jobs:
             location = self.remove_parenthesis_in_location(j[3])
@@ -424,4 +460,14 @@ class MainWindow(QWidget):
         return jobs_to_display
 
     def map_window_closed(self):
+        """Ensures no processing happens with map when it's not displayed.
+        Needed because to use the map, it's created as a MainWindow member variable.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         self.map_displayed = False
