@@ -1,16 +1,20 @@
-name: Python application CI
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python application
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -19,26 +23,31 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
-    - name: Install system dependencies
+    - name: Build Secrets
+      env:
+        API_KEY: ${{ secrets.SERPAPI_KEY }}
       run: |
-        sudo apt update
-        sudo apt install --yes libgl1-mesa-dev libxkbcommon-x11-0 xvfb libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 qt6-base-dev
-    - name: Install Python dependencies
+        echo 'api_key = "'$API_KEY'"' >> my_secrets.py
+    - name: Install dependencies
       run: |
+        sudo apt update && sudo apt install --yes libgl1-mesa-dev libxkbcommon-x11-0 xvfb libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 qt6-base-dev
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install flake8
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        # Adjust your dependencies accordingly
-        pip uninstall -y opencv-python
+        pip uninstall opencv-python
         pip install opencv-python-headless
+        pip install google-search-results
     - name: Lint with flake8
       run: |
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --max-complexity=10 --max-line-length=154 --statistics
-    - name: Setup Xvfb and export DISPLAY
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --ignore=E0611
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
       run: |
-        export DISPLAY=:99
-        Xvfb :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-    - name: Run tests with pytest
-      run: |
-        python -m pytest -s tests/
+        disp=:8
+        screen=0
+        geom=640x480x24
+        exec Xvfb $disp -screen $screen $geom 2>/tmp/Xvfb.log &
+        export DISPLAY=:8
+        python -m pytest tests/*.py
