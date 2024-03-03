@@ -21,7 +21,7 @@ def dummy_mainwindow():
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_qapplication():
-    app = QApplication([])
+    app = QApplication(['-platform', 'offscreen'])
     yield
     app.quit()
 
