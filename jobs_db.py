@@ -137,9 +137,19 @@ def insert_jobs(cursor, jobs):
 
 
 def get_jobs(cursor):
+    """Get job data from database tables.
+
+    Keyword arguments:
+    cursor -- Used to get job data from tables
+
+    Returns:
+    jobs -- List of lists of jobs containing links and qualifications as lists
+    """
+
     # Makes it much less likely it will be found in the given text
     delimiter = "\nasdfqwerzxcv"
 
+    # Get job data (links and qualifications go with their associated job)
     cursor.execute(f"""
         SELECT jobs.*, 
         GROUP_CONCAT(related_links.url, '\n') AS related_links, 
@@ -152,8 +162,9 @@ def get_jobs(cursor):
     """)
 
     jobs = cursor.fetchall()
-    jobs = [list(j) for j in jobs]
+    jobs = [list(j) for j in jobs]  # Convert from tuples
 
+    # Links and qualifications from database get sent as a single string. Convert to list.
     for i, j in enumerate(jobs):
         if j[-2]:  # links
             jobs[i][-2] = j[-2].split('\n')

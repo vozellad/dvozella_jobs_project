@@ -1,3 +1,6 @@
+"""GUI using PySide6 to display all jobs to user, view job data of user-selected job, and allow user to filter jobs.
+A map may also be displayed to show the locations of jobs."""
+
 import re
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QWidget
@@ -12,40 +15,73 @@ class MainWindow(QWidget):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.map_displayed = False
-
         # Init jobs
+        self.map_displayed = False
         self.JOBS = jobs
         self.filtered_jobs = self.JOBS  # Filtered jobs
         self.list_jobs()
         self.ui.jobs_listWidget.selectionModel().currentChanged.connect(self.job_selected)
 
+        # Init deselect button
         self.ui.deselect_pushButton.clicked.connect(self.deselect_job)
 
+        # Init map
         self.jobs_map = MapWindow([])
         self.jobs_map.windowClosed.connect(self.map_window_closed)
         self.ui.map_pushButton.clicked.connect(self.display_map)
 
+        # Init filters
         self.ui.applyFilters_pushButton.clicked.connect(self.filter_jobs)
-
         self.insert_city_locations()
-
         self.ui.filter_gridLayout.setAlignment(self.ui.applyFilters_pushButton, Qt.AlignmentFlag.AlignRight)
 
     def list_jobs(self):
+        """Re-fills list widget (that hosts jobs for the user to select) with the currently selected jobs
+        or all jobs if it's called as the window is created.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
+        # Don't append to previous existing list
         self.ui.jobs_listWidget.clear()
+
         for j in self.filtered_jobs:
             job_str = f"{j[1]}\n{j[2]}"  # Get title and company as text
             self.ui.jobs_listWidget.addItem(job_str)
+
+        # Display amount of jobs
         self.ui.resultsAmt_label.setText(str(len(self.filtered_jobs)))
 
     def job_selected(self, current, previous):
-        if previous.row() == -1:  # Boxes will be empty on window startup
+        """Clicked event for list item being selected in list to display jobs.
+        When user selects new job, data from that job is displayed in more detail.
+
+        Keyword arguments:
+        current -- Current list index of job selected
+        previous -- Previous list index of job selected
+                    (right as the clicked event happened,
+                    and it hasn't fully transitioned to the new selection yet)
+
+        Returns:
+        None
+        """
+
+        # Boxes will be empty on window startup
+        if previous.row() == -1:
             self.set_placeholders()
+
+        # If row is set programmatically to select nothing
         if current.row() == -1:
             return
+
+        # Fill boxes with data of selected job
         self.set_job_fields(self.filtered_jobs[current.row()])
 
+        # Remove multiple odd behaviors related to user clicking on list widget
         self.ui.jobs_listWidget.setFocus(Qt.FocusReason.MouseFocusReason)
         self.ui.jobs_listWidget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 

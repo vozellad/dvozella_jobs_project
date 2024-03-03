@@ -1,3 +1,5 @@
+"""Testing functions in mapwindow.py"""
+
 from unittest.mock import MagicMock
 
 import pytest
@@ -19,6 +21,7 @@ def setup_qapplication():
 
 
 def test_geocode_location(dummy_mapwindow):
+    """Test function being able to retrieve location."""
     dummy_mapwindow.geolocator.geocode = \
         MagicMock(return_value=MagicMock(latitude=42, longitude=-70))
     result = dummy_mapwindow.geocode_location("New York City, NY")

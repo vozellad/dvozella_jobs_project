@@ -1,3 +1,5 @@
+"""Testing functions in mainwindow.py"""
+
 import pytest
 from PySide6.QtWidgets import QApplication
 
@@ -25,6 +27,7 @@ def setup_qapplication():
 
 
 def test_filter_keyword(dummy_mainwindow):
+    """Test jobs being filtered by user-given keyword correctly."""
     dummy_mainwindow.ui.keywordFilter_plainTextEdit.setPlainText("python")
     dummy_mainwindow.filter_keyword()
     assert len(dummy_mainwindow.filtered_jobs) == 1
@@ -32,6 +35,7 @@ def test_filter_keyword(dummy_mainwindow):
 
 
 def test_filter_city_location(dummy_mainwindow):
+    """Test jobs being filtered by user-selected location correctly."""
     dummy_mainwindow.ui.locationFilter_comboBox.setCurrentText("New York")
     dummy_mainwindow.filter_city_location()
     assert len(dummy_mainwindow.filtered_jobs) == 2
@@ -39,6 +43,7 @@ def test_filter_city_location(dummy_mainwindow):
 
 
 def test_filter_remote(dummy_mainwindow):
+    """Test jobs being filtered by remote selection correctly."""
     dummy_mainwindow.ui.remoteFilter_checkBox.setChecked(True)
     dummy_mainwindow.filter_remote()
     assert len(dummy_mainwindow.filtered_jobs) == 2
@@ -46,6 +51,7 @@ def test_filter_remote(dummy_mainwindow):
 
 
 def test_filter_min_salary(dummy_mainwindow):
+    """Test jobs being filtered by user-given minimum salary correctly."""
     dummy_mainwindow.ui.salaryFilter_spinBox.setValue(110_000)
     dummy_mainwindow.filter_min_salary()
     assert len(dummy_mainwindow.filtered_jobs) == 2
