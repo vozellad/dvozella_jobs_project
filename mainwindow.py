@@ -63,8 +63,7 @@ class MainWindow(QWidget):
         Keyword arguments:
         current -- Current list index of job selected
         previous -- Previous list index of job selected
-                    (right as the clicked event happened,
-                    and it hasn't fully transitioned to the new selection yet)
+                    (right as the clicked event happened, and it hasn't fully transitioned to the new selection yet)
 
         Returns:
         None
@@ -86,13 +85,33 @@ class MainWindow(QWidget):
         self.ui.jobs_listWidget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
     def deselect_job(self):
+        """Removes the focus on a job in the job-list, and removes the selected job data being displayed.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
+        # Remove the focus of the selected job
         self.ui.jobs_listWidget.clearSelection()
         self.clear_job_fields()
         self.clear_placeholders()
 
+        # Remove multiple odd behaviors related to user clicking on list widget
         self.ui.jobs_listWidget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def set_placeholders(self):
+        """Change the placeholder text of the boxes holding selected job data to the default text for that field.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         self.ui.title_plainTextEdit.setPlaceholderText("Not available")
         self.ui.company_plainTextEdit.setPlaceholderText("Not available")
         self.ui.location_plainTextEdit.setPlaceholderText("Not available")
@@ -104,6 +123,15 @@ class MainWindow(QWidget):
         self.ui.qualifications_plainTextEdit.setPlaceholderText("Not available")
 
     def clear_placeholders(self):
+        """Change the placeholder text of the boxes holding selected job data to be empty.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         self.ui.title_plainTextEdit.setPlaceholderText("")
         self.ui.company_plainTextEdit.setPlaceholderText("")
         self.ui.location_plainTextEdit.setPlaceholderText("")
@@ -115,6 +143,16 @@ class MainWindow(QWidget):
         self.ui.qualifications_plainTextEdit.setPlaceholderText("")
 
     def set_job_fields(self, job):
+        """Change the text of the boxes holding selected job data to include the job data relevant for each field.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
+        # Displays data if available
         self.ui.title_plainTextEdit.setPlainText(job[1] if job[1] else "")
         self.ui.company_plainTextEdit.setPlainText(job[2] if job[2] else "")
         self.ui.location_plainTextEdit.setPlainText(job[3] if job[3] else "")
@@ -126,6 +164,15 @@ class MainWindow(QWidget):
         self.ui.qualifications_plainTextEdit.setPlainText('\n'.join(job[-1]) if job[-1] else "")
 
     def clear_job_fields(self):
+        """Change the text of the boxes holding selected job data to be empty so no job data is displayed.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         self.ui.title_plainTextEdit.setPlainText("")
         self.ui.company_plainTextEdit.setPlainText("")
         self.ui.location_plainTextEdit.setPlainText("")
@@ -137,6 +184,21 @@ class MainWindow(QWidget):
         self.ui.qualifications_plainTextEdit.setPlainText("")
 
     def filter_jobs(self):
+        """Clicked event for when user applies filters.
+        Filter jobs in list and what's displayed on list and map.
+        Filter jobs by:
+            Remote (checkbox): Either filter to only get remote jobs or ignore the information.
+            Minimum salary (spinbox): Filter jobs to only get what's at or above given yearly salary number.
+            Keyword (textedit): Search all job data to find whether it contains a string.
+            Location (combobox): Filter jobs based on a city. User selects from available cities from jobs.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         self.filtered_jobs = self.JOBS
 
         self.filter_remote()
@@ -150,6 +212,15 @@ class MainWindow(QWidget):
         self.deselect_job()
 
     def filter_keyword(self):
+        """Search every job data fields to find whether they contain a string.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         keyword = self.ui.keywordFilter_plainTextEdit.toPlainText()
         keyword_jobs = []
 
@@ -160,29 +231,83 @@ class MainWindow(QWidget):
         self.filtered_jobs = keyword_jobs
 
     def keyword_in_job(self, keyword, job):
-        return (self.keyword_in_job_sublist(keyword, job[:7]) or
-                self.keyword_in_job_sublist(keyword, job[-2]) or
-                self.keyword_in_job_sublist(keyword, job[-1]))
+        """Find keyword in job's sublists.
 
-    def keyword_in_job_sublist(self, keyword, job_sublist):
-        if not job_sublist:
+        Keyword arguments:
+        keyword -- string to be found in job data
+        job -- list to be searched through for keyword
+
+        Returns:
+        Boolean for if keyword is found
+        """
+
+        # First 7 items are just strings. Last two (links, qualifications) are lists of strings.
+        return (self.keyword_in_list(keyword, job[:7]) or
+                self.keyword_in_list(keyword, job[-2]) or
+                self.keyword_in_list(keyword, job[-1]))
+
+    def keyword_in_list(self, keyword, l):
+        """Searches list for keyword with null safety and case insensitivity.
+
+        Keyword arguments:
+        keyword -- string to be found in data
+        l -- list of data to be searched for keyword
+
+        Returns:
+        Boolean for if keyword is found
+        """
+
+        if not l:
             return False
-        for item in job_sublist:
+        for item in l:
             if keyword.lower() in item.lower():
                 return True
         return False
 
     def insert_city_locations(self):
+        """Gets cities of jobs and displays them for the user to select for location filtering.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         cities = self.get_city_locations()
-        self.ui.locationFilter_comboBox.addItem("")
+        self.ui.locationFilter_comboBox.addItem("")  # First item allows no city to be selected
         self.ui.locationFilter_comboBox.addItems(cities)
 
     def get_city_locations(self):
+        """Gathers cities of jobs.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        An alphabetically sorted set of cities
+        """
+
         cities = set()
         for j in self.filtered_jobs:
             if j[3]:
                 cities.add(self.get_city_str(j[3]))
         return sorted(cities)
+
+    def get_city_str(self, city):
+        """Formats a location like "Boston, MA" by removing text that isn't an address and removing the zipcode.
+
+        Keyword arguments:
+        city -- String of location
+
+        Returns:
+        city -- String of location formatted
+        """
+
+        city = self.remove_parenthesis_in_location(city)
+        if re.search("[0-9-]+$", city):  # remove zipcode
+            city = " ".join(city.split(" ")[:-1])
+        return city
 
     def filter_city_location(self):
         user_city = self.ui.locationFilter_comboBox.currentText()
@@ -193,12 +318,6 @@ class MainWindow(QWidget):
             if j[3] and user_city == self.get_city_str(j[3]):
                 city_jobs.append(j)
         self.filtered_jobs = city_jobs
-
-    def get_city_str(self, city):
-        city = self.remove_parenthesis_in_location(city)
-        if re.search("[0-9-]+$", city):  # remove zipcode
-            city = " ".join(city.split(" ")[:-1])
-        return city
 
     def remove_parenthesis_in_location(self, city):
         if "(" in city:  # remove "(+# others)" occurrences
