@@ -205,7 +205,6 @@ class MainWindow(QWidget):
         self.jobs_map.show()
 
     def update_map(self):
-        self.jobs_map.clear()
         self.add_jobs_to_map()
 
     def add_jobs_to_map(self):

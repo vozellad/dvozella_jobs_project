@@ -49,6 +49,8 @@ class MapWindow(QWidget):
         self.web_view.setHtml(self.in_memory_file.getvalue().decode())
 
     def add_locations(self, jobs):
+        self.clear()
+
         for job_id, title, company, location in jobs:
             job_loc_geocoded = self.geocode_location(location)
             if not job_loc_geocoded:
