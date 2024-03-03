@@ -15,7 +15,7 @@ def test_get_jobs(excel_file_path):
 
     assert len(jobs) == 750
 
-    db_connection = sqlite3.connect("test_jobs_db.sqlite")
+    db_connection = sqlite3.connect("../test_jobs_db.sqlite")
     cursor = db_connection.cursor()
     cursor.execute('''DROP TABLE IF EXISTS jobs;''')
     cursor.execute('''DROP TABLE IF EXISTS related_links;''')

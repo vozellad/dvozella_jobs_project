@@ -10,7 +10,7 @@ def test_jobs_db():
     Testing includes creating, updating, and deleting jobs data.
     """
 
-    db_connection = sqlite3.connect("test_jobs_db.sqlite")
+    db_connection = sqlite3.connect("../test_jobs_db.sqlite")
     cursor = db_connection.cursor()
     cursor.execute('''DROP TABLE IF EXISTS jobs;''')
     cursor.execute('''DROP TABLE IF EXISTS related_links;''')
