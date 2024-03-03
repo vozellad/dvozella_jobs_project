@@ -1,9 +1,8 @@
-from PySide6.QtGui import Qt
-from PySide6.QtWidgets import QWidget, QApplication
 import re
-
-from ui_mainwindow import Ui_MainWindow
+from PySide6.QtGui import Qt
+from PySide6.QtWidgets import QWidget
 from mapwindow import MapWindow
+from ui_mainwindow import Ui_MainWindow
 
 
 class MainWindow(QWidget):

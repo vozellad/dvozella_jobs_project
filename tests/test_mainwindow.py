@@ -1,6 +1,6 @@
-import sys
 import pytest
 from PySide6.QtWidgets import QApplication
+
 import mainwindow
 
 
@@ -19,7 +19,7 @@ def dummy_mainwindow():
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_qapplication():
-    app = QApplication(sys.argv)
+    app = QApplication([])
     yield
     app.quit()
 

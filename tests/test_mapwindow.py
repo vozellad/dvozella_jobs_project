@@ -1,7 +1,8 @@
-import sys
 from unittest.mock import MagicMock
+
 import pytest
 from PySide6.QtWidgets import QApplication
+
 import mapwindow
 
 
@@ -12,7 +13,7 @@ def dummy_mapwindow():
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_qapplication():
-    app = QApplication(sys.argv)
+    app = QApplication([])
     yield
     app.quit()
 
