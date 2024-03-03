@@ -310,6 +310,15 @@ class MainWindow(QWidget):
         return city
 
     def filter_city_location(self):
+        """Filter jobs based on a city. User selects from available cities from jobs.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         user_city = self.ui.locationFilter_comboBox.currentText()
         if not user_city:
             return
@@ -320,39 +329,79 @@ class MainWindow(QWidget):
         self.filtered_jobs = city_jobs
 
     def remove_parenthesis_in_location(self, city):
+        """Cuts out text that isn't location like "Boston, MA (+2 others)"
+
+        Keyword arguments:
+        city -- Location to format
+
+        Returns:
+        city -- Formatted location
+        """
+
         if "(" in city:  # remove "(+# others)" occurrences
             city = re.findall(".+\(", city)[0][:-1].rstrip()
         return city
 
     def filter_remote(self):
+        """Either filter to only get remote jobs or ignore the information.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         if self.ui.remoteFilter_checkBox.isChecked():
             self.filtered_jobs = [j for j in self.filtered_jobs if j[7]]
+            # Way database works is it's either 1 or nothing.
 
     def filter_min_salary(self):
+        """Filter jobs to only get what's at or above given yearly salary number.
+
+        Keyword arguments:
+        None
+
+        Returns:
+        None
+        """
+
         user_min_salary = int(self.ui.salaryFilter_spinBox.value())
         min_salary_jobs = []
 
         for j in self.filtered_jobs:
-            if not j[6]:
-                j_min_salary = 0
-            else:
-                j_min_salary = re.findall("^[0-9K.]+", j[6])[0]
-
-                if j_min_salary[-1] == "K":
-                    j_min_salary = float(j_min_salary[:-1]) * 1000
-                else:
-                    j_min_salary = float(j_min_salary)
-
-                rate = j[6].split()[-1]
-                if rate.startswith("hour"):  # could be "hourly"
-                    j_min_salary *= 40 * 52
-                elif rate.startswith("week"):
-                    j_min_salary *= 52
-
-            if user_min_salary <= j_min_salary:
+            if user_min_salary <= self.get_yearly_salary(j[6]):
                 min_salary_jobs.append(j)
 
         self.filtered_jobs = min_salary_jobs
+
+    def get_yearly_salary(self, salary):
+        """Filter jobs to only get what's at or above given yearly salary number.
+
+        Keyword arguments:
+        salary -- String of salary
+
+        Returns:
+        new_salary -- Float of yearly salary
+        """
+
+        if not salary:
+            return 0
+
+        new_salary = re.findall("^[0-9K.]+", salary)[0]
+
+        if new_salary[-1] == "K":
+            new_salary = float(new_salary[:-1]) * 1000
+        else:
+            new_salary = float(new_salary)
+
+        rate = salary.split()[-1]
+        if rate.startswith("hour"):  # could be "hourly"
+            new_salary *= 40 * 52
+        elif rate.startswith("week"):
+            new_salary *= 52
+
+        return new_salary
 
     def display_map(self):
         self.map_displayed = True
