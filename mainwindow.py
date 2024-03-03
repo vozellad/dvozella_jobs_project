@@ -186,7 +186,8 @@ class MainWindow(QWidget):
 
                 if j_min_salary[-1] == "K":
                     j_min_salary = float(j_min_salary[:-1]) * 1000
-                j_min_salary = float(j_min_salary)
+                else:
+                    j_min_salary = float(j_min_salary)
 
                 rate = j[6].split()[-1]
                 if rate.startswith("hour"):  # could be "hourly"
