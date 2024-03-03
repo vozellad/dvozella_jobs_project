@@ -18,7 +18,6 @@ class MainWindow(QWidget):
         # Init jobs
         self.JOBS = jobs
         self.filtered_jobs = self.JOBS  # Filtered jobs
-        self.prev_filtered_jobs = self.filtered_jobs
         self.list_jobs()
         self.ui.jobs_listWidget.selectionModel().currentChanged.connect(self.job_selected)
 
@@ -103,7 +102,6 @@ class MainWindow(QWidget):
         self.ui.qualifications_plainTextEdit.setPlainText("")
 
     def filter_jobs(self):
-        self.prev_filtered_jobs = self.filtered_jobs
         self.filtered_jobs = self.JOBS
 
         self.filter_remote()
@@ -190,26 +188,16 @@ class MainWindow(QWidget):
 
     def display_map(self):
         self.map_displayed = True
-        jobs_to_display = self.format_jobs_for_map(self.filtered_jobs)
-        self.jobs_map.add_locations(jobs_to_display)
+        self.add_jobs_to_map()
         self.jobs_map.show()
 
     def update_map(self):
-        # Find new jobs
-        jobs_to_add = self.get_set_difference(self.filtered_jobs, self.prev_filtered_jobs)
-        jobs_to_add = self.format_jobs_for_map(jobs_to_add)
-        self.jobs_map.add_locations(jobs_to_add)
+        self.jobs_map.clear()
+        self.add_jobs_to_map()
 
-        # Find jobs not there anymore
-        jobs_to_remove = self.get_set_difference(self.prev_filtered_jobs, self.filtered_jobs)
-        jobs_to_remove = [j[0] for j in jobs_to_remove]  # Get all job_ids
-        self.jobs_map.remove_locations(jobs_to_remove)
-
-    def get_set_difference(self, list1, list2):
-        list1_tuples = [tuple(l) for l in list1]
-        list2_tuples = [tuple(l) for l in list2]
-        list_diff = set(list1_tuples) - set(list2_tuples)
-        return list(list_diff)
+    def add_jobs_to_map(self):
+        jobs_to_display = self.format_jobs_for_map(self.filtered_jobs)
+        self.jobs_map.add_locations(jobs_to_display)
 
     def format_jobs_for_map(self, jobs):
         jobs_to_display = []

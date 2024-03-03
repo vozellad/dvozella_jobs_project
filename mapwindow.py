@@ -15,10 +15,12 @@ class MapWindow(QWidget):
     def __init__(self, jobs):
         super().__init__()
 
+        self.map_data_markers = None
+        self.jobs_map = None
+        self.geolocator = None
         self.web_view = QWebEngineView()
         self.in_memory_file = None
-        self.geocode_cache = {}  # Simple in-memory cache
-        self.job_markers = {}
+        self.geocode_cache = {}
 
         self.setWindowTitle("Jobs Displayed on Map")
         self.window_width = 500
@@ -26,6 +28,12 @@ class MapWindow(QWidget):
         self.layout = QVBoxLayout(self)
         self.setLayout(self.layout)
 
+        self.init_map()
+        self.add_locations(jobs)
+
+        self.layout.addWidget(self.web_view)
+
+    def init_map(self):
         self.geolocator = Nominatim(user_agent="dvozella_jobs_project")
         coordinate = (39.828175, -98.5795)
         self.jobs_map = folium.Map(
@@ -34,9 +42,6 @@ class MapWindow(QWidget):
             location=coordinate
         )
         self.map_data_markers = MarkerCluster().add_to(self.jobs_map)
-        self.add_locations(jobs)
-
-        self.layout.addWidget(self.web_view)
 
     def refresh_map(self):
         self.in_memory_file = io.BytesIO()
@@ -45,9 +50,6 @@ class MapWindow(QWidget):
 
     def add_locations(self, jobs):
         for job_id, title, company, location in jobs:
-            if job_id in self.job_markers:
-                continue
-
             job_loc_geocoded = self.geocode_location(location)
             if not job_loc_geocoded:
                 continue
@@ -58,8 +60,6 @@ class MapWindow(QWidget):
             )
             marker.add_to(self.map_data_markers)
             marker.job_id = job_id
-
-            self.job_markers[job_id] = marker
 
         self.refresh_map()
 
@@ -77,17 +77,10 @@ class MapWindow(QWidget):
 
         return None
 
-    def remove_locations(self, job_ids):
-        for job_id in job_ids:
-            if job_id in self.job_markers:
-                marker = self.job_markers[job_id]
-                self.map_data_markers.get_root().remove(marker)
-                del self.job_markers[job_id]
-
-        self.refresh_map()
-
     def closeEvent(self, event):
-        # Emit the signal when the window is closed
         self.windowClosed.emit()
         event.accept()
 
+    def clear(self):
+        self.init_map()
+        self.refresh_map()
