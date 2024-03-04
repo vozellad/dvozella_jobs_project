@@ -1,4 +1,4 @@
-/my_secrets.py
-/*.sqlite
-/jobs_results.txt
-/map.html
+my_secrets.py
+*.sqlite
+*.sqlite-journal
+map.html
