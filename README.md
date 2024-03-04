@@ -21,8 +21,9 @@ Program provides a graphical user interface for viewing jobs data.<br>
 User is able to filter by keyword, location, minimum salary, and if the job's remote.<br>
 Locations of jobs can be displayed on a map.<br>
 
-Run the file, then view the text file it wrote to named 'jobs_results.txt'.<br>
-Use an application such as 'DB Browser for SQLite' to view the database.<br>
+Run the main.py file in the directory.<br>
+You can view a text file it wrote to named 'jobs_results.txt'.<br>
+If you need to view the database, use an application such as 'DB Browser for SQLite'.<br>
 The GUI will also start when executing the program.<br>
 
 Click the Map button to view the locations of the jobs.<br>
