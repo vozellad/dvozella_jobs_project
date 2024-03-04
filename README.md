@@ -5,7 +5,7 @@ Project uses Python 3.10.<br>
 If you would like to view the database, install the application 'DB Browser for SQLite'.<br>
 
 Create 'my_secrets.py' in the project directory, and initialize an 'api_key' variable with your api key.<br>
-The 'my_secrets.py' should be in the follwing format:&emsp;```api_key="your api key here"```<br>
+The 'my_secrets.py' should be in the following format:&emsp;```api_key="your api key here"```<br>
 
 Gets 5 pages of Google search jobs results via Serpapi and stores the results in a text file.<br>
 Gets jobs from an Excel file.<br>
