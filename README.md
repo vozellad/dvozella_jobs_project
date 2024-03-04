@@ -2,6 +2,13 @@ Authors: Demetrios Vozella<br>
 
 Project uses Python 3.10.<br>
 
+GUI was made in Qt Creator using Qt6 with PySide6.<br>
+After each ui modification, a terminal line converts it from a .ui file to a .py file so the project can reference and 
+use it. Both files are included in this repository.<br>
+
+The following terminal line is used after editing the GUI form. This can also be done manually. 
+```pyside6-uic /Path/To/QtCreator/Project/form.ui -o /Path/To/This/Project/ui_mainwindow.py```
+
 If you would like to view the database, install the application 'DB Browser for SQLite'.<br>
 
 Create 'my_secrets.py' in the project directory, and initialize an 'api_key' variable with your api key.<br>
