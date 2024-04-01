@@ -46,3 +46,9 @@ def test_filter_min_salary(jobs):
     jobs = jobs_filtering.filter_min_salary(jobs, user_min_salary)
     assert len(jobs) == 2
     assert jobs[0][6] == "60 hourly"
+
+
+def test_remove_parenthesis_in_location():
+    """Test extra information in city string being removed correctly."""
+    city = "Boston, MA (+2 others)"
+    assert jobs_filtering.remove_parenthesis_in_location(city) == "Boston, MA"
