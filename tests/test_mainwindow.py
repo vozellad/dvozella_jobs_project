@@ -1,14 +1,13 @@
-"""Testing functions in mainwindow.py"""
+"""Testing filter functions in jobs_filtering.py that are used in mainwindow.py"""
 
 import pytest
-from PySide6.QtWidgets import QApplication
 
-import mainwindow
+import jobs_filtering
 
 
 @pytest.fixture
-def dummy_mainwindow():
-    jobs = [
+def jobs():
+    return [
         ["1", "Software Engineer", "ABC Inc.", "New York", "Job description...", "2024-03-01", "100K - 120K",
          True, [], []],
         ["2", "Data Scientist", "XYZ Corp.", "San Francisco", "Job description...", "2024-03-02", "60 hourly",
@@ -16,43 +15,34 @@ def dummy_mainwindow():
         ["3", "Product Manager", "123 Co.", "New York", "Job description...", "2024-03-03", "150000 - 567567",
          True, ["google.com", "something.com"], ["Python", "Negative 2 years of experience"]]
     ]
-    return mainwindow.MainWindow(jobs)
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_qapplication():
-    app = QApplication(['-platform', 'offscreen'])
-    yield
-    app.quit()
-
-
-def test_filter_keyword(dummy_mainwindow):
+def test_filter_keyword(jobs):
     """Test jobs being filtered by user-given keyword correctly."""
-    dummy_mainwindow.ui.keywordFilter_plainTextEdit.setPlainText("python")
-    dummy_mainwindow.filter_keyword()
-    assert len(dummy_mainwindow.filtered_jobs) == 1
-    assert dummy_mainwindow.filtered_jobs[0][9][0] == "Python"
+    keyword = "Python"
+    jobs = jobs_filtering.filter_keyword(jobs, keyword)
+    assert len(jobs) == 1
+    assert jobs[0][9][0] == keyword
 
 
-def test_filter_city_location(dummy_mainwindow):
+def test_filter_city_location(jobs):
     """Test jobs being filtered by user-selected location correctly."""
-    dummy_mainwindow.ui.locationFilter_comboBox.setCurrentText("New York")
-    dummy_mainwindow.filter_city_location()
-    assert len(dummy_mainwindow.filtered_jobs) == 2
-    assert dummy_mainwindow.filtered_jobs[1][3] == "New York"
+    city = "New York"
+    jobs = jobs_filtering.filter_city_location(jobs, city)
+    assert len(jobs) == 2
+    assert jobs[1][3] == city
 
 
-def test_filter_remote(dummy_mainwindow):
+def test_filter_remote(jobs):
     """Test jobs being filtered by remote selection correctly."""
-    dummy_mainwindow.ui.remoteFilter_checkBox.setChecked(True)
-    dummy_mainwindow.filter_remote()
-    assert len(dummy_mainwindow.filtered_jobs) == 2
-    assert dummy_mainwindow.filtered_jobs[0][7]
+    jobs = jobs_filtering.filter_remote(jobs, True)
+    assert len(jobs) == 2
+    assert jobs[0][7]
 
 
-def test_filter_min_salary(dummy_mainwindow):
+def test_filter_min_salary(jobs):
     """Test jobs being filtered by user-given minimum salary correctly."""
-    dummy_mainwindow.ui.salaryFilter_spinBox.setValue(110_000)
-    dummy_mainwindow.filter_min_salary()
-    assert len(dummy_mainwindow.filtered_jobs) == 2
-    assert dummy_mainwindow.filtered_jobs[0][6] == "60 hourly"
+    user_min_salary = 110_000
+    jobs = jobs_filtering.filter_min_salary(jobs, user_min_salary)
+    assert len(jobs) == 2
+    assert jobs[0][6] == "60 hourly"

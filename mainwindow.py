@@ -6,6 +6,7 @@ from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QWidget
 from mapwindow import MapWindow
 from ui_mainwindow import Ui_MainWindow
+import jobs_filtering
 
 
 class MainWindow(QWidget):
@@ -18,7 +19,7 @@ class MainWindow(QWidget):
         # Init jobs
         self.map_displayed = False
         self.JOBS = jobs
-        self.filtered_jobs = self.JOBS  # Filtered jobs
+        self.filtered_jobs = self.JOBS
         self.list_jobs()
         self.ui.jobs_listWidget.selectionModel().currentChanged.connect(self.job_selected)
 
@@ -201,68 +202,22 @@ class MainWindow(QWidget):
 
         self.filtered_jobs = self.JOBS
 
-        self.filter_remote()
-        self.filter_min_salary()
-        self.filter_keyword()
-        self.filter_city_location()
+        remote_checked = self.ui.remoteFilter_checkBox.isChecked()
+        self.filtered_jobs = jobs_filtering.filter_remote(self.filtered_jobs, remote_checked)
+
+        user_min_salary = int(self.ui.salaryFilter_spinBox.value())
+        self.filtered_jobs = jobs_filtering.filter_min_salary(self.filtered_jobs, user_min_salary)
+
+        keyword = self.ui.keywordFilter_plainTextEdit.toPlainText()
+        self.filtered_jobs = jobs_filtering.filter_keyword(self.filtered_jobs, keyword)
+
+        user_city = self.ui.locationFilter_comboBox.currentText()
+        self.filtered_jobs = jobs_filtering.filter_city_location(self.filtered_jobs, user_city)
 
         self.list_jobs()
         if self.map_displayed:
             self.update_map()
         self.deselect_job()
-
-    def filter_keyword(self):
-        """Search every job data fields to find whether they contain a string.
-
-        Keyword arguments:
-        None
-
-        Returns:
-        None
-        """
-
-        keyword = self.ui.keywordFilter_plainTextEdit.toPlainText()
-        keyword_jobs = []
-
-        for j in self.filtered_jobs:
-            if self.keyword_in_job(keyword, j):
-                keyword_jobs.append(j)
-
-        self.filtered_jobs = keyword_jobs
-
-    def keyword_in_job(self, keyword, job):
-        """Find keyword in job's sublists.
-
-        Keyword arguments:
-        keyword -- string to be found in job data
-        job -- list to be searched through for keyword
-
-        Returns:
-        Boolean for if keyword is found
-        """
-
-        # First 7 items are just strings. Last two (links, qualifications) are lists of strings.
-        return (self.keyword_in_list(keyword, job[:7]) or
-                self.keyword_in_list(keyword, job[-2]) or
-                self.keyword_in_list(keyword, job[-1]))
-
-    def keyword_in_list(self, keyword, l):
-        """Searches list for keyword with null safety and case insensitivity.
-
-        Keyword arguments:
-        keyword -- string to be found in data
-        l -- list of data to be searched for keyword
-
-        Returns:
-        Boolean for if keyword is found
-        """
-
-        if not l:
-            return False
-        for item in l:
-            if keyword.lower() in item.lower():
-                return True
-        return False
 
     def insert_city_locations(self):
         """Gets cities of jobs and displays them for the user to select for location filtering.
@@ -274,134 +229,9 @@ class MainWindow(QWidget):
         None
         """
 
-        cities = self.get_city_locations()
+        cities = jobs_filtering.get_city_locations(self.filtered_jobs)
         self.ui.locationFilter_comboBox.addItem("")  # First item allows no city to be selected
         self.ui.locationFilter_comboBox.addItems(cities)
-
-    def get_city_locations(self):
-        """Gathers cities of jobs.
-
-        Keyword arguments:
-        None
-
-        Returns:
-        An alphabetically sorted set of cities
-        """
-
-        cities = set()
-        for j in self.filtered_jobs:
-            if j[3]:
-                cities.add(self.get_city_str(j[3]))
-        return sorted(cities)
-
-    def get_city_str(self, city):
-        """Formats a location like "Boston, MA" by removing text that isn't an address and removing the zipcode.
-
-        Keyword arguments:
-        city -- String of location
-
-        Returns:
-        city -- String of location formatted
-        """
-
-        city = self.remove_parenthesis_in_location(city)
-        if re.search("[0-9-]+$", city):  # remove zipcode
-            city = " ".join(city.split(" ")[:-1])
-        return city
-
-    def filter_city_location(self):
-        """Filter jobs based on a city. User selects from available cities from jobs.
-
-        Keyword arguments:
-        None
-
-        Returns:
-        None
-        """
-
-        user_city = self.ui.locationFilter_comboBox.currentText()
-        if not user_city:
-            return
-        city_jobs = []
-        for j in self.filtered_jobs:
-            if j[3] and user_city == self.get_city_str(j[3]):
-                city_jobs.append(j)
-        self.filtered_jobs = city_jobs
-
-    def remove_parenthesis_in_location(self, city):
-        """Cuts out text that isn't location like "Boston, MA (+2 others)"
-
-        Keyword arguments:
-        city -- Location to format
-
-        Returns:
-        city -- Formatted location
-        """
-
-        if "(" in city:  # remove "(+# others)" occurrences
-            city = re.findall(".+\(", city)[0][:-1].rstrip()
-        return city
-
-    def filter_remote(self):
-        """Either filter to only get remote jobs or ignore the information.
-
-        Keyword arguments:
-        None
-
-        Returns:
-        None
-        """
-
-        if self.ui.remoteFilter_checkBox.isChecked():
-            self.filtered_jobs = [j for j in self.filtered_jobs if j[7]]
-            # Way database works is it's either 1 or nothing.
-
-    def filter_min_salary(self):
-        """Filter jobs to only get what's at or above given yearly salary number.
-
-        Keyword arguments:
-        None
-
-        Returns:
-        None
-        """
-
-        user_min_salary = int(self.ui.salaryFilter_spinBox.value())
-        min_salary_jobs = []
-
-        for j in self.filtered_jobs:
-            if user_min_salary <= self.get_yearly_salary(j[6]):
-                min_salary_jobs.append(j)
-
-        self.filtered_jobs = min_salary_jobs
-
-    def get_yearly_salary(self, salary):
-        """Filter jobs to only get what's at or above given yearly salary number.
-
-        Keyword arguments:
-        salary -- String of salary
-
-        Returns:
-        new_salary -- Float of yearly salary
-        """
-
-        if not salary:
-            return 0
-
-        new_salary = re.findall("^[0-9K.]+", salary)[0]
-
-        if new_salary[-1] == "K":
-            new_salary = float(new_salary[:-1]) * 1000
-        else:
-            new_salary = float(new_salary)
-
-        rate = salary.split()[-1]
-        if rate.startswith("hour"):  # could be "hourly"
-            new_salary *= 40 * 52
-        elif rate.startswith("week"):
-            new_salary *= 52
-
-        return new_salary
 
     def display_map(self):
         """Creates map window to display job locations. Jobs that are displayed in list gets displayed on map.
@@ -439,25 +269,8 @@ class MainWindow(QWidget):
         None
         """
 
-        jobs_to_display = self.format_jobs_for_map(self.filtered_jobs)
+        jobs_to_display = jobs_filtering.format_jobs_for_map(self.filtered_jobs)
         self.jobs_map.add_locations(jobs_to_display)
-
-    def format_jobs_for_map(self, jobs):
-        """Prepare job data for map.
-
-        Keyword arguments:
-        jobs -- list of jobs
-
-        Returns:
-        jobs_to_display -- formatted jobs for map: (id, title, company, formatted location)
-        """
-
-        jobs_to_display = []
-        for j in jobs:
-            location = self.remove_parenthesis_in_location(j[3])
-            curr_data = tuple(j[:3]) + (location,)
-            jobs_to_display.append(curr_data)
-        return jobs_to_display
 
     def map_window_closed(self):
         """Ensures no processing happens with map when it's not displayed.

@@ -67,7 +67,7 @@ def prepare_jobs_for_db(jobs):
         salary = j["detected_extensions"].get("salary", "").strip()
         work_from_home = j["detected_extensions"].get("work_from_home", "")
 
-        # If work_from_home empty but location has "anywhere", the job is considered remote1
+        # If work_from_home empty but location has "anywhere", the job is considered remote
         if work_from_home == "" and j["location"].strip().lower() == "anywhere":
             work_from_home = True
 
