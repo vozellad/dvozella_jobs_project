@@ -11,14 +11,10 @@ def filter_keyword(jobs, keyword):
     keyword -- text user inputted into "keyword" filter field
 
     Returns:
-    keyword_jobs -- jobs filtered based on keyword
+    jobs filtered based on keyword
     """
 
-    keyword_jobs = []
-    for j in jobs:
-        if keyword_in_job(keyword, j):
-            keyword_jobs.append(j)
-    return keyword_jobs
+    return [j for j in jobs if keyword_in_job(keyword, j)]
 
 
 def keyword_in_job(keyword, job):
@@ -51,10 +47,7 @@ def keyword_in_list(keyword, l):
 
     if not l:
         return False
-    for item in l:
-        if keyword.lower() in item.lower():
-            return True
-    return False
+    return any(keyword.lower() in item.lower() for item in l)
 
 
 def filter_city_location(jobs, user_city):
@@ -65,16 +58,12 @@ def filter_city_location(jobs, user_city):
     user_city -- city selected by user
 
     Returns:
-    city_jobs -- jobs filtered based on city
+    jobs filtered based on city
     """
 
     if not user_city:
         return
-    city_jobs = []
-    for j in jobs:
-        if j[3] and user_city == get_city_str(j[3]):
-            city_jobs.append(j)
-    return city_jobs
+    return [j for j in jobs if j[3] and user_city == get_city_str(j[3])]
 
 
 def get_city_str(city):
@@ -118,10 +107,7 @@ def get_city_locations(jobs):
     An alphabetically sorted set of cities
     """
 
-    cities = set()
-    for j in jobs:
-        if j[3]:
-            cities.add(get_city_str(j[3]))
+    cities = {get_city_str(j[3]) for j in jobs if j[3]}
     return sorted(cities)
 
 
@@ -149,14 +135,10 @@ def filter_min_salary(jobs, user_min_salary):
     user_min_salary -- user given number for minimum salary
 
     Returns:
-    min_salary_jobs -- jobs filtered based on minimum salary
+    jobs filtered based on minimum salary
     """
 
-    min_salary_jobs = []
-    for j in jobs:
-        if user_min_salary <= get_yearly_salary(j[6]):
-            min_salary_jobs.append(j)
-    return min_salary_jobs
+    return [j for j in jobs if user_min_salary <= get_yearly_salary(j[6])]
 
 
 def get_yearly_salary(salary):
