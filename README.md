@@ -1,13 +1,15 @@
 Authors: Demetrios Vozella<br>
 
 Project uses Python 3.10.<br>
+Project was developed on Linux.<br>
 
 GUI was made in Qt Creator using Qt6 with PySide6.<br>
 After each ui modification, a terminal line converts it from a .ui file to a .py file so the project can reference and 
 use it. Both files are included in this repository.<br>
 
-The following terminal line is used after editing the GUI form. This can also be done manually. 
-```pyside6-uic /Path/To/QtCreator/Project/form.ui -o /Path/To/This/Project/ui_mainwindow.py```
+The following terminal lines are used after editing the GUI form.<br>
+Linux/Unix: ```pyside6-uic /Path/To/QtCreator/Project/form.ui -o /Path/To/This/Project/ui_mainwindow.py```<br>
+Windows: ```pyside6-uic C:\Path\To\QtCreator\Project\form.ui -o C:\Path\To\This\Project\ui_mainwindow.py```<br>
 
 If you would like to view the database, install the application 'DB Browser for SQLite'.<br>
 
@@ -36,4 +38,4 @@ The GUI will also start when executing the program.<br>
 Click the Map button to view the locations of the jobs.<br>
 The more jobs currently listed, the longer it will take for the map to build.<br>
 
-What is missing for Sprint 4 is making the GUI tests run headless so GitHub actions can run them. 
+Nothing is missing for the Sprints. 
