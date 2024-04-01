@@ -62,7 +62,7 @@ def filter_city_location(jobs, user_city):
     """
 
     if not user_city:
-        return
+        return jobs
     return [j for j in jobs if j[3] and user_city == get_city_str(j[3])]
 
 
@@ -125,6 +125,8 @@ def filter_remote(jobs, remote_checked):
     if remote_checked:
         return [j for j in jobs if j[7]]
         # Way database works is it's either 1 or nothing.
+    else:
+        return jobs
 
 
 def filter_min_salary(jobs, user_min_salary):
